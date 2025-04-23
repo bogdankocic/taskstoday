@@ -9,13 +9,28 @@ class Notification extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['title', 'content', 'is_seen', 'user_id'];
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'title', 
+        'content', 
+        'is_seen', 
+        'user_id'
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     */
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
 
+    /**
+    * Get the user that the notification belongs to.
+    */
     public function user()
     {
         return $this->belongsTo(User::class);

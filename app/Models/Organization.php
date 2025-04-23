@@ -9,13 +9,27 @@ class Organization extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name', 'email', 'profile_photo'];
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'name', 
+        'email', 
+        'profile_photo'
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     */
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
 
+    /**
+    * Get the projects that the organization has.
+    */
     public function projects()
     {
         return $this->hasMany(Project::class);

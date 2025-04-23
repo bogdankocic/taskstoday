@@ -6,8 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class TaskFile extends Model
 {
-    protected $fillable = ['title', 'task_id'];
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'title', 
+        'task_id'
+    ];
 
+    /**
+     * Get the task that file belongs to.
+     */
     public function task()
     {
         return $this->belongsTo(Task::class);
