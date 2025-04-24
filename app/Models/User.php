@@ -25,6 +25,7 @@ class User extends Authenticatable
         'login_after_hours_count',
         'is_verified',
         'role_id',
+        'organization_id',
         'teamrole',
     ];
 
