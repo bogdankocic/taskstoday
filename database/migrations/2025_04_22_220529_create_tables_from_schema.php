@@ -129,7 +129,7 @@ return new class extends Migration
         Schema::create('project_file', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-
+            
             $table->foreignId('project_id')->constrained('projects');
         });
     }
