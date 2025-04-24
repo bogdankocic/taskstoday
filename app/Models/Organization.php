@@ -34,4 +34,12 @@ class Organization extends Model
     {
         return $this->hasMany(Project::class);
     }
+
+    /**
+    * Get the users that the organization has.
+    */
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }
