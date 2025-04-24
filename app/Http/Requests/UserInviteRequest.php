@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\RolesEnum;
+use App\Enums\TeamRolesEnum;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,10 +24,17 @@ class UserInviteRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'email' => 'required|email|unique:users,email',
-            'role' => 'required|in:moderator,user',
         ];
+        
+        if($this->user()->role->name === RolesEnum::ADMIN->value) {
+            $rules['organization_id'] = 'required|exists:organizations,id';
+        } else {
+            $rules['team_role'] = 'required|in:moderator,user';
+        }
+
+        return $rules;
     }
 
     /**
@@ -34,10 +42,10 @@ class UserInviteRequest extends FormRequest
      */
     private function userAuthorized(User $user): bool
     {
-        if($user->role()->name === RolesEnum::ADMIN) {
+        if($user->role->name === RolesEnum::ADMIN->value) {
             return true;
         } else {
-            //teamrole na users tabeli ne na team_member
+            return $user->organization_id === $this->input('organization_id');
         }
 
         return true;

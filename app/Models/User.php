@@ -19,6 +19,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'karma',
+        'tasks_completed_count',
+        'login_strike',
+        'login_after_hours_count',
+        'is_verified',
+        'role_id',
+        'teamrole',
     ];
 
     /**
@@ -27,6 +34,17 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    /**
+     * The attributes that should have default values.
+     */
+    protected $attributes = [
+        'karma' => 0,
+        'tasks_completed_count' => 0,
+        'login_strike' => 0,
+        'login_after_hours_count' => 0,
+        'is_verified' => false,
     ];
 
     /**
@@ -81,6 +99,6 @@ class User extends Authenticatable
      */
     public function role()
     {
-        return $this->hasOne(Role::class);
+        return $this->hasOne(Role::class, 'id', 'role_id');
     }
 }
