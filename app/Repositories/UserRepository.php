@@ -4,11 +4,15 @@ namespace App\Repositories;
 
 use App\Enums\RolesEnum;
 use App\Enums\TeamRolesEnum;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserActivateRequest;
 use App\Http\Requests\UserInviteRequest;
+use App\Http\Resources\UserResource;
 use App\Models\Role;
 use App\Models\User;
 use App\Notifications\UserInviteNotification;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class UserRepository extends BaseRepository
 {
@@ -38,5 +42,39 @@ class UserRepository extends BaseRepository
         $user->update([
             'password' => bcrypt($request->input('password')),
         ]);
+    }
+
+    public function selfUpdate(UpdateUserRequest $request): UserResource
+    {
+        $user = $request->user();
+
+        $user->first_name = $request->input('first_name');
+        $user->last_name = $request->input('last_name');
+        $user->profile_photo = $request->file('profile_photo') ? 
+            $request->file('profile_photo')->store('profile_photos') : null;
+        $user->save();
+
+        return new UserResource($user);
+    }
+
+    public function delete($id): void
+    {
+        User::find($id)->delete();
+    }
+
+    public function get(Request $request): ResourceCollection
+    {
+        $user = $request->user();
+
+        if ($user->role->name === RolesEnum::ADMIN->value) {
+            return UserResource::collection(User::all());
+        } else {
+            return UserResource::collection(User::where('organization_id', $user->organization_id)->get());
+        }
+    }
+
+    public function getOneModel(int $id): User
+    {
+        return User::find($id);
     }
 }

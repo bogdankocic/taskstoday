@@ -64,6 +64,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the organization that user belongs to.
+     */
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    /**
      * The achievements that belong to the user.
      */
     public function achievements()
