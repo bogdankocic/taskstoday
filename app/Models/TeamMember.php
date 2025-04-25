@@ -9,6 +9,11 @@ class TeamMember extends Pivot
     protected $table = 'team_member';
 
     /**
+     * Indicates if the model should be timestamped.
+     */
+    public $timestamps = false;
+
+    /**
      * The attributes that are mass assignable.
      */
     protected $fillable = [

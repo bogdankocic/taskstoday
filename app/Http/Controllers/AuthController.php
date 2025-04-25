@@ -17,6 +17,9 @@ class AuthController extends Controller
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * Log in a user and return an API token.
+     */
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -31,6 +34,9 @@ class AuthController extends Controller
         return response()->json(['token' => $token], 200);
     }
 
+    /**
+     * Log out the currently authenticated user.
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
@@ -38,12 +44,18 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
 
+    /**
+     * Invite a new user to the platform.
+     */
     public function inviteUser(UserInviteRequest $request)
     {
         $this->userRepository->inviteUser($request);
         return response()->json(['message' => 'User invited successfully'], 200);
     }
 
+    /**
+     * Activate a user account.
+     */
     public function activateUser(UserActivateRequest $request)
     {
         $this->userRepository->activateUser($request);

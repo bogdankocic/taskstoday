@@ -18,6 +18,9 @@ class OrganizationsController extends Controller
         $this->organizationRepository = $organizationRepository;
     }
 
+    /**
+     * Get all organizations.
+     */
     public function get(): JsonResponse
     {
         if (! Gate::allows('admin-only')) {
@@ -27,6 +30,9 @@ class OrganizationsController extends Controller
         return response()->json($this->organizationRepository->get());
     }
 
+    /**
+     * Get a single organization by ID.
+     */
     public function getOne(int $id): JsonResponse
     {
         $organization = $this->organizationRepository->getOneModel($id);
@@ -38,6 +44,9 @@ class OrganizationsController extends Controller
         return response()->json(new OrganizationResource($organization));
     }
 
+    /**
+     * Create a new organization.
+     */
     public function create(OrganizationCreateRequest $request): JsonResponse
     {
         if (! Gate::allows('admin-only')) {
@@ -48,6 +57,9 @@ class OrganizationsController extends Controller
         return response()->json($organization, 201);
     }
 
+    /**
+     * Update an existing organization by ID.
+     */
     public function update(int $id, OrganizationUpdateRequest $request): JsonResponse
     {
         $organization = $this->organizationRepository->getOneModel($id);
@@ -60,6 +72,10 @@ class OrganizationsController extends Controller
         return response()->json($organization);
     }
 
+    /**
+     * Delete an organization by ID.
+     * Only accessible by users with the 'admin-only' permission.
+     */
     public function delete(int $id): JsonResponse
     {
         if (! Gate::allows('admin-only')) {
