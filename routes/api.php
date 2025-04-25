@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrganizationsController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TeamController;
 
 Route::prefix('auth')->group(function () {
     Route::get('/sanctum', function (Request $request) {
@@ -26,7 +28,23 @@ Route::prefix('organizations')->group(function () {
 });
 
 Route::prefix('users')->group(function () {
-    Route::get('/', [UserController::class, 'get'])->middleware('auth:sanctum');;
-    Route::post('/self-update', [UserController::class, 'selfUpdate'])->middleware('auth:sanctum');;
-    Route::delete('/{id}', [UserController::class, 'delete'])->middleware('auth:sanctum');;
+    Route::get('/', [UserController::class, 'get'])->middleware('auth:sanctum');
+    Route::post('/self-update', [UserController::class, 'selfUpdate'])->middleware('auth:sanctum');
+    Route::delete('/{id}', [UserController::class, 'delete'])->middleware('auth:sanctum');
+});
+
+Route::prefix('projects')->group(function () {
+    Route::get('/', [ProjectController::class, 'get'])->middleware('auth:sanctum');
+    Route::post('/', [ProjectController::class, 'create'])->middleware('auth:sanctum');
+    Route::post('/{id}', [ProjectController::class, 'update'])->middleware('auth:sanctum');
+    Route::post('/{id}/finish', [ProjectController::class, 'finish'])->middleware('auth:sanctum');
+    Route::delete('/{id}', [ProjectController::class, 'delete'])->middleware('auth:sanctum');
+});
+
+Route::prefix('teams')->group(function () {
+    Route::post('/', [TeamController::class, 'create'])->middleware('auth:sanctum');
+    Route::post('/{id}', [TeamController::class, 'updateName'])->middleware('auth:sanctum');
+    Route::delete('/{id}', [TeamController::class, 'delete'])->middleware('auth:sanctum');
+    Route::post('/{teamId}/members/{userId}', [TeamController::class, 'addMember'])->middleware('auth:sanctum');
+    Route::delete('/{teamId}/members/{userId}', [TeamController::class, 'removeMember'])->middleware('auth:sanctum');
 });

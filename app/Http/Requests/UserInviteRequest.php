@@ -31,7 +31,7 @@ class UserInviteRequest extends FormRequest
         if($this->user()->role->name === RolesEnum::ADMIN->value) {
             $rules['organization_id'] = 'required|exists:organizations,id';
         } else {
-            $rules['team_role'] = 'required|in:moderator,user';
+            $rules['team_role'] = 'required|in:' . implode(',', TeamRolesEnum::values());
         }
 
         return $rules;

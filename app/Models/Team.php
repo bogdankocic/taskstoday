@@ -9,6 +9,13 @@ class Team extends Model
 {
     use SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'title', 
+        'project_id',
+    ];
         
     /**
      * Get the attributes that should be cast.
