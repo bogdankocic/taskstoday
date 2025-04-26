@@ -7,6 +7,7 @@ use App\Http\Controllers\OrganizationsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TaskController;
 
 Route::prefix('auth')->group(function () {
     Route::get('/sanctum', function (Request $request) {
@@ -47,4 +48,16 @@ Route::prefix('teams')->group(function () {
     Route::delete('/{id}', [TeamController::class, 'delete'])->middleware('auth:sanctum');
     Route::post('/{teamId}/members/{userId}', [TeamController::class, 'addMember'])->middleware('auth:sanctum');
     Route::delete('/{teamId}/members/{userId}', [TeamController::class, 'removeMember'])->middleware('auth:sanctum');
+});
+
+Route::prefix('tasks')->group(function () {
+    Route::get('/', [TaskController::class, 'get'])->middleware('auth:sanctum');
+    Route::post('/', [TaskController::class, 'create'])->middleware('auth:sanctum');
+    Route::post('/{task}', [TaskController::class, 'update'])->middleware('auth:sanctum');
+    Route::delete('/{task}', [TaskController::class, 'delete'])->middleware('auth:sanctum');
+    Route::post('/{task}/activate', [TaskController::class, 'activate'])->middleware('auth:sanctum');
+    Route::post('/{task}/complete', [TaskController::class, 'complete'])->middleware('auth:sanctum');
+    Route::post('/{task}/vote/{user}', [TaskController::class, 'complexityVote'])->middleware('auth:sanctum');
+    Route::post('/{task}/assign-performer/{user}', [TaskController::class, 'assignPerformer'])->middleware('auth:sanctum');
+    Route::post('/{task}/assign-contributor/{user}', [TaskController::class, 'assignContributor'])->middleware('auth:sanctum');
 });

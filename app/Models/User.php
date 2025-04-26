@@ -100,7 +100,7 @@ class User extends Authenticatable
      */
     public function teams()
     {
-        return $this->belongsToMany(Team::class, 'team_member')->using(TeamMember::class)->withPivot(['teamrole', 'joined_at']);
+        return $this->belongsToMany(Team::class, 'team_member')->using(TeamMember::class)->withPivot(['joined_at']);
     }
 
     /**

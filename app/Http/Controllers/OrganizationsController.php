@@ -23,7 +23,7 @@ class OrganizationsController extends Controller
      */
     public function get(): JsonResponse
     {
-        if (! Gate::allows('admin-only')) {
+        if (! Gate::allows('app-admin-only')) {
             abort(403, 'Unauthorized.');
         }
 
@@ -49,7 +49,7 @@ class OrganizationsController extends Controller
      */
     public function create(OrganizationCreateRequest $request): JsonResponse
     {
-        if (! Gate::allows('admin-only')) {
+        if (! Gate::allows('app-admin-only')) {
             abort(403, 'Unauthorized.');
         }
 
@@ -78,7 +78,7 @@ class OrganizationsController extends Controller
      */
     public function delete(int $id): JsonResponse
     {
-        if (! Gate::allows('admin-only')) {
+        if (! Gate::allows('app-admin-only')) {
             abort(403, 'Unauthorized.');
         }
 

@@ -4,8 +4,8 @@ namespace App\Enums;
 
 enum ProjectStatusesEnum: string
 {
-    case INPROGRESS     = 'inprogress';
-    case FINISHED      = 'finished';
+    case INPROGRESS = 'inprogress';
+    case FINISHED   = 'finished';
 
     /**
      * Return all values as an array.
