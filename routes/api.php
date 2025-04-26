@@ -57,7 +57,7 @@ Route::prefix('tasks')->group(function () {
     Route::delete('/{task}', [TaskController::class, 'delete'])->middleware('auth:sanctum');
     Route::post('/{task}/activate', [TaskController::class, 'activate'])->middleware('auth:sanctum');
     Route::post('/{task}/complete', [TaskController::class, 'complete'])->middleware('auth:sanctum');
-    Route::post('/{task}/vote/{user}', [TaskController::class, 'complexityVote'])->middleware('auth:sanctum');
+    Route::post('/{task}/vote', [TaskController::class, 'complexityVote'])->middleware('auth:sanctum');
     Route::post('/{task}/assign-performer/{user}', [TaskController::class, 'assignPerformer'])->middleware('auth:sanctum');
     Route::post('/{task}/assign-contributor/{user}', [TaskController::class, 'assignContributor'])->middleware('auth:sanctum');
 });

@@ -41,6 +41,14 @@ class Task extends Model
     }
 
     /**
+     * Get the team that task belongs to.
+     */
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
+
+    /**
      * Get the creator that task belongs to.
      */
     public function creator()

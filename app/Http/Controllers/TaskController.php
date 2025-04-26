@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TaskStatusesEnum;
+use App\Http\Requests\ComplexityVoteRequest;
 use App\Http\Requests\TaskCreateRequest;
 use App\Http\Requests\TaskUpdateRequest;
 use App\Models\Organization;
@@ -9,6 +11,7 @@ use App\Models\Task;
 use App\Models\Team;
 use App\Models\User;
 use App\Repositories\TaskRepository;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -32,7 +35,7 @@ class TaskController extends Controller
             'complexity' => $request->query('complexity'),
             'sort_by_time' => $request->query('sort_by_time'),
             'sort_by_complexity' => $request->query('sort_by_complexity'),
-            'save_filter' => $request->query('sort_by_complexity') ?? false,
+            'save_filter' => (boolean)$request->query('save_filter') ?? false,
         ];
 
         $tasks = $this->taskRepository->get($filters, $request);
@@ -104,6 +107,12 @@ class TaskController extends Controller
      */
     public function assignPerformer(Task $task, User $user, Request $request): JsonResponse
     {
+        if(!$task->team->members->contains('id', $user->id)) {
+            throw new HttpResponseException(response()->json([
+                'message' => 'Cannot assign user.',
+            ], 400));
+        }
+
         if (
             ! Gate::allows(
                 'my-organization-and-admin-or-moderator-team-member-or-self',
@@ -116,14 +125,23 @@ class TaskController extends Controller
         }
 
         $this->taskRepository->assignPerformer($task, $user, $request);
-        return response()->json(['message' => 'Task activated successfully'], 200);
+        return response()->json(['message' => 'Performer assigned successfully'], 200);
     }
 
     /**
-     * Assignes performer for the task.
+     * Assignes contributor for the task.
      */
     public function assignContributor(Task $task, User $user, Request $request): JsonResponse
     {
+        if(
+            !$task->team->members->contains('id', $user->id) || 
+            $task->performer_id === $user->id
+        ) {
+            throw new HttpResponseException(response()->json([
+                'message' => 'Cannot assign user.',
+            ], 400));
+        }
+
         if (
             ! Gate::allows(
                 'performer-only',
@@ -134,7 +152,7 @@ class TaskController extends Controller
         }
 
         $this->taskRepository->assignContributor($task, $user, $request);
-        return response()->json(['message' => 'Task activated successfully'], 200);
+        return response()->json(['message' => 'Contributor assigned successfully'], 200);
     }
 
     /**
@@ -142,6 +160,14 @@ class TaskController extends Controller
      */
     public function activate(Task $task, Request $request): JsonResponse
     {
+        if(
+            !$task->complexity || $task->status !== TaskStatusesEnum::TODO->value
+        ) {
+            throw new HttpResponseException(response()->json([
+                'message' => 'Cannot activate task.',
+            ], 400));
+        }
+
         if (
             ! Gate::allows(
                 'performer-only',
@@ -160,6 +186,14 @@ class TaskController extends Controller
      */
     public function complete(Task $task, Request $request): JsonResponse
     {
+        if(
+            $task->status !== TaskStatusesEnum::INPROGRESS->value
+        ) {
+            throw new HttpResponseException(response()->json([
+                'message' => 'Cannot activate task.',
+            ], 400));
+        }
+
         if (
             ! Gate::allows(
                 'performer-only',
@@ -176,7 +210,7 @@ class TaskController extends Controller
     /**
      * Vote on task complexity.
      */
-    public function complexityVote(Task $task, User $user, Request $request): JsonResponse
+    public function complexityVote(Task $task, ComplexityVoteRequest $request): JsonResponse
     {
         if (
             ! Gate::allows(
@@ -187,7 +221,7 @@ class TaskController extends Controller
             abort(403, 'Unauthorized.');
         }
 
-        $this->taskRepository->complexityVote($task, $user, $request);
+        $this->taskRepository->complexityVote($task, $request);
         return response()->json(['message' => 'Vote recorded successfully'], 200);
     }
 }

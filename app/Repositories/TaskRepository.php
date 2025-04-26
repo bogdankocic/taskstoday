@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Enums\TaskStatusesEnum;
+use App\Enums\TeamRolesEnum;
 use App\Http\Requests\ComplexityVoteRequest;
 use App\Http\Requests\TaskCreateRequest;
 use App\Http\Requests\TaskUpdateRequest;
@@ -10,6 +11,7 @@ use App\Http\Resources\TaskResource;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskComplexityVote;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -52,7 +54,22 @@ class TaskRepository extends BaseRepository
 
     public function get(array $filters, Request $request): ResourceCollection
     {
+        $user = $request->user();
         $query = Task::query();
+
+        if($user->teamrole === TeamRolesEnum::ADMIN->value) {
+            $query->join('projects', 'tasks.project_id', '=', 'projects.id')
+                ->where('projects.organization_id', $user->organization_id)
+                ->select('tasks.*');
+        } else if($user->teamrole === TeamRolesEnum::MODERATOR->value) {
+            $userProjects = $user->allProjects()->pluck('id')->toArray();
+
+            $query->whereIn('project_id', $userProjects);  
+        } else {
+            $userTeams = $user->teams->pluck('id')->toArray();
+
+            $query->whereIn('team_id', $userTeams); 
+        }
 
         if($filters['save_filter']) {
             $cacheKey = "task-filter-{$request->user()->id}";
@@ -61,12 +78,12 @@ class TaskRepository extends BaseRepository
             Cache::forever($cacheKey, $filters);
         }
 
-        if (!empty($filters['team_id'])) {
-            $query->where('team_id', $filters['team_id']);
-        }
+        $filterableFields = ['team_id', 'complexity'];
 
-        if (!empty($filters['complexity'])) {
-            $query->where('complexity', $filters['complexity']);
+        foreach ($filterableFields as $field) {
+            if (!empty($filters[$field])) {
+                $query->where($field, $filters[$field]);
+            }
         }
 
         if (!empty($filters['sort_by_time'])) {
@@ -84,7 +101,7 @@ class TaskRepository extends BaseRepository
 
     public function assignPerformer(Task $task, User $user, Request $request): void
     {
-        $task->preformer_id = $user->id;
+        $task->performer_id = $user->id;
         $task->save();
     }
 
@@ -106,13 +123,14 @@ class TaskRepository extends BaseRepository
         $task->save();
     }
 
-    public function complexityVote(Task $task, User $user, ComplexityVoteRequest $request): void
+    public function complexityVote(Task $task, ComplexityVoteRequest $request): void
     {
+        $user = request()->user();
         $vote = TaskComplexityVote::where('task_id', $task->id)->where('user_id', $user->id)->first();
 
         if($vote === null) {
             TaskComplexityVote::create(
-                ['task_id' => $task->id, 'user_id' => $user->id, 'vote' => $request->complexity]
+                ['task_id' => $task->id, 'user_id' => $user->id, 'complexity' => $request->complexity]
             );
         }
     }

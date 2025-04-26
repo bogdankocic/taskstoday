@@ -21,7 +21,8 @@ class TaskComplexityVote extends Model
      */
     protected $fillable = [
         'task_id', 
-        'user_id'
+        'user_id',
+        'complexity',
     ];
 
     /**

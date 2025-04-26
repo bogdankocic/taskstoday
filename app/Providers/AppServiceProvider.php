@@ -59,8 +59,8 @@ class AppServiceProvider extends ServiceProvider
             Task $task,
             int $projectId,
         ) {
-            return 
-            ($user->organization_id === $organization->id && $user->teamrole = TeamRolesEnum::ADMIN->value) ||
+            return
+            ($user->organization_id === $organization->id && $user->teamrole === TeamRolesEnum::ADMIN->value) ||
             (
                 $user->teamrole === TeamRolesEnum::MODERATOR->value &&
                 $user->teams->count() > 0 && 
@@ -72,7 +72,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('my-organization-and-admin-or-moderator-team-member-or-self', function (User $current, Organization $organization, Team $team, User $user) {
             return 
             ($current->organization_id === $organization->id && $current->teamrole === TeamRolesEnum::ADMIN->value) || 
-            ($team->members->contains('user_id', $current->id) && $current->teamrole === TeamRolesEnum::MODERATOR->value) ||
+            ($team->members->contains('id', $current->id) && $current->teamrole === TeamRolesEnum::MODERATOR->value) ||
             ($current->id === $user->id);
         });
 
@@ -80,7 +80,7 @@ class AppServiceProvider extends ServiceProvider
             User $user,
             Team $team,
         ) {
-            return $team->members->contains('user_id', $user->id);
+            return $team->members->contains('id', $user->id);
         });
 
         Gate::define('performer-only', function (
