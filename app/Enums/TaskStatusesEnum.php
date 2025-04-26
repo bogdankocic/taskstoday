@@ -2,10 +2,11 @@
 
 namespace App\Enums;
 
-enum RolesEnum: string
+enum TaskStatusesEnum: string
 {
-    case ADMIN = 'admin';
-    case USER  = 'user';
+    case TODO       = 'todo';
+    case INPROGRESS = 'inprogress';
+    case COMPLETED  = 'completed';
 
     /**
      * Return all values as an array.

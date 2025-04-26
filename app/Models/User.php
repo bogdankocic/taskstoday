@@ -88,11 +88,11 @@ class User extends Authenticatable
     }
 
     /**
-     * The projects that belong to the user.
+     * The projects that belong to the user through teams.
      */
-    public function projects()
+    public function allProjects()
     {
-        return $this->belongsToMany(Project::class, 'user_project_tag');
+        return $this->teams()->with('project')->get()->pluck('project')->flatten();
     }
 
     /**
@@ -100,7 +100,7 @@ class User extends Authenticatable
      */
     public function teams()
     {
-        return $this->belongsToMany(Team::class, 'team_member')->using(TeamMember::class)->withPivot(['teamrole', 'joined_at']);
+        return $this->belongsToMany(Team::class, 'team_member')->using(TeamMember::class)->withPivot(['joined_at']);
     }
 
     /**

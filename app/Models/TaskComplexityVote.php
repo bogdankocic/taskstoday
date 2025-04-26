@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
 
-class TeamMember extends Pivot
+class TaskComplexityVote extends Model
 {
     /**
      * Indicates database table for the model.
      */
-    protected $table = 'team_member';
+    protected $table = 'task_complexity_vote';
 
     /**
      * Indicates if the model should be timestamped.
@@ -20,24 +20,17 @@ class TeamMember extends Pivot
      * The attributes that are mass assignable.
      */
     protected $fillable = [
-        'joined_at', 
-        'team_id', 
-        'user_id'
-    ];
-
-    /**
-     * Get the attributes that should be cast.
-     */
-    protected $casts = [
-        'joined_at' => 'datetime',
+        'task_id', 
+        'user_id',
+        'complexity',
     ];
 
     /**
      * Get the team that member belongs to.
      */
-    public function team()
+    public function task()
     {
-        return $this->belongsTo(Team::class);
+        return $this->belongsTo(Task::class);
     }
 
     /**

@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class UserProjectTag extends Pivot
 {
+    /**
+     * Indicates database table for the model.
+     */
     protected $table = 'user_project_tag';
 
     /**

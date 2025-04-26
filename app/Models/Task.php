@@ -19,7 +19,8 @@ class Task extends Model
         'project_id', 
         'creator_id', 
         'performer_id', 
-        'contributor_id'
+        'contributor_id',
+        'team_id',
     ];
 
     /**
@@ -37,6 +38,14 @@ class Task extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    /**
+     * Get the team that task belongs to.
+     */
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
     }
 
     /**
