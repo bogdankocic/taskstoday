@@ -34,22 +34,20 @@ class TeamRepository extends BaseRepository
         return new TeamResource($team);
     }
 
-    public function updateName(int $id, TeamUpdateNameRequest $request): void
+    public function updateName(Team $team, TeamUpdateNameRequest $request): void
     {
-        $team = Team::find($id);
         $team->title = $request->title;
         $team->save();
     }
 
-    public function delete(int $id, Request $request): void
+    public function delete(Team $team, Request $request): void
     {
-        Team::find($id)->delete();
+        $team->delete();
     }
 
-    public function addMember(int $teamId, int $userId, Request $request): void
+    public function addMember(Team $team, User $user, Request $request): void
     {
         $currentUser = $request->user();
-        $user = User::find($userId);
 
         if ($currentUser->organization_id !== $user->organization_id) {
             throw new HttpResponseException(response()->json([
@@ -58,16 +56,16 @@ class TeamRepository extends BaseRepository
         }
 
         TeamMember::create([
-            'team_id' => $teamId,
-            'user_id' => $userId,
+            'team_id' => $team->id,
+            'user_id' => $user->id,
             'joined_at' => now(),
         ]);
     }
 
-    public function removeMember(int $teamId, int $userId, Request $request): void
+    public function removeMember(Team $team, User $user, Request $request): void
     {
-        TeamMember::where('team_id', $teamId)
-            ->where('user_id', $userId)
+        TeamMember::where('team_id', $team->id)
+            ->where('user_id', $user->id)
             ->delete();
     }
 

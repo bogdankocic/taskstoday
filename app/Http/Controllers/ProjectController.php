@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectCreateRequest;
 use App\Http\Requests\ProjectUpdateRequest;
+use App\Models\Project;
 use App\Repositories\OrganizationRepository;
 use App\Repositories\ProjectRepository;
 use Illuminate\Http\JsonResponse;
@@ -42,7 +43,7 @@ class ProjectController extends Controller
     /**
      * Update an existing project.
      */
-    public function update(int $id, ProjectUpdateRequest $request): JsonResponse
+    public function update(Project $project, ProjectUpdateRequest $request): JsonResponse
     {
         if (
             ! Gate::allows(
@@ -53,14 +54,14 @@ class ProjectController extends Controller
             abort(403, 'Unauthorized.');
         }
 
-        $project = $this->projectRepository->update($id, $request);
+        $project = $this->projectRepository->update($project, $request);
         return response()->json($project);
     }
 
     /**
      * Delete a project by ID.
      */
-    public function delete(int $id, Request $request): JsonResponse
+    public function delete(Project $project, Request $request): JsonResponse
     {
         if (
             ! Gate::allows(
@@ -71,7 +72,7 @@ class ProjectController extends Controller
             abort(403, 'Unauthorized.');
         }
 
-        $this->projectRepository->delete($id, $request);
+        $this->projectRepository->delete($project, $request);
         return response()->json(['message' => 'Project deleted successfully'], 200);
     }
 
@@ -87,7 +88,7 @@ class ProjectController extends Controller
     /**
      * Get all projects.
      */
-    public function finish(int $id, Request $request): JsonResponse
+    public function finish(Project $project, Request $request): JsonResponse
     {
         if (
             ! Gate::allows(
@@ -98,7 +99,7 @@ class ProjectController extends Controller
             abort(403, 'Unauthorized.');
         }
         
-        $projects = $this->projectRepository->finish($id, $request);
+        $projects = $this->projectRepository->finish($project, $request);
         return response()->json($projects);
     }
 }

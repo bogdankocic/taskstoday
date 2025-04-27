@@ -57,9 +57,9 @@ class UserRepository extends BaseRepository
         return new UserResource($user);
     }
 
-    public function delete($id): void
+    public function delete(User $user): void
     {
-        User::find($id)->delete();
+        $user->delete();
     }
 
     public function get(Request $request): ResourceCollection
