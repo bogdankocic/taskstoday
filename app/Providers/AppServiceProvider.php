@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Enums\RolesEnum;
 use App\Enums\TeamRolesEnum;
+use App\Models\Notification;
 use App\Models\Organization;
 use App\Models\Task;
 use App\Models\Team;

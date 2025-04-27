@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\NotificationController;
 
 Route::prefix('auth')->group(function () {
     Route::get('/sanctum', function (Request $request) {
@@ -60,4 +61,9 @@ Route::prefix('tasks')->group(function () {
     Route::post('/{task}/vote', [TaskController::class, 'complexityVote'])->middleware('auth:sanctum');
     Route::post('/{task}/assign-performer/{user}', [TaskController::class, 'assignPerformer'])->middleware('auth:sanctum');
     Route::post('/{task}/assign-contributor/{user}', [TaskController::class, 'assignContributor'])->middleware('auth:sanctum');
+});
+
+Route::prefix('notifications')->group(function () {
+    Route::get('/', [NotificationController::class, 'get'])->middleware('auth:sanctum');
+    Route::post('/seen', [NotificationController::class, 'markAsSeen'])->middleware('auth:sanctum');
 });
