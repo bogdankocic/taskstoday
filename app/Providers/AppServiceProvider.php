@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use App\Enums\RolesEnum;
 use App\Enums\TeamRolesEnum;
-use App\Models\Notification;
 use App\Models\Organization;
+use App\Models\Project;
 use App\Models\Task;
 use App\Models\Team;
 use App\Models\User;
@@ -75,6 +75,16 @@ class AppServiceProvider extends ServiceProvider
             ($current->organization_id === $organization->id && $current->teamrole === TeamRolesEnum::ADMIN->value) || 
             ($team->members->contains('id', $current->id) && $current->teamrole === TeamRolesEnum::MODERATOR->value) ||
             ($current->id === $user->id);
+        });
+
+        Gate::define('my-organization-and-admin-or-moderator-and-user-on-project', function (
+            User $user, 
+            Organization $organization,
+            Project $project,
+        ) {
+            return
+            ($user->organization_id === $organization->id && $user->teamrole === TeamRolesEnum::ADMIN->value) ||
+            $project->teams()->with('members')->get()->pluck('members')->flatten()->contains('id', $user->id);
         });
 
         Gate::define('team-member-only', function (

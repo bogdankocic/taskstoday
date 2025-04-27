@@ -7,11 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 class TaskFile extends Model
 {
     /**
+     * Indicates database table for the model.
+     */
+    protected $table = 'task_file';
+
+    /**
+     * Indicates if the model should be timestamped.
+     */
+    public $timestamps = false;
+
+    /**
      * The attributes that are mass assignable.
      */
     protected $fillable = [
         'title', 
-        'task_id'
+        'task_id',
+        'path',
     ];
 
     /**
