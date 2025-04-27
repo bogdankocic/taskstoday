@@ -87,6 +87,16 @@ class AppServiceProvider extends ServiceProvider
             $project->teams()->with('members')->get()->pluck('members')->flatten()->contains('id', $user->id);
         });
 
+        Gate::define('my-organization-and-admin-or-moderator-on-project-or-user-team-member-project-only', function (
+            User $user, 
+            Organization $organization,
+            Project $project,
+        ) {
+            return 
+            ($user->organization_id === $organization->id && $user->teamrole === TeamRolesEnum::ADMIN->value) || 
+            $user->teams->pluck('project_id')->contains($project->id);
+        });
+
         Gate::define('team-member-only', function (
             User $user,
             Team $team,

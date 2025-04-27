@@ -7,6 +7,7 @@ use App\Http\Requests\ComplexityVoteRequest;
 use App\Http\Requests\TaskCreateRequest;
 use App\Http\Requests\TaskUpdateRequest;
 use App\Models\Organization;
+use App\Models\Project;
 use App\Models\Task;
 use App\Models\Team;
 use App\Models\User;
@@ -50,7 +51,7 @@ class TaskController extends Controller
         if (
             ! Gate::allows(
                 'my-organization-and-admin-or-moderator-on-project-or-user-team-member', 
-                [Organization::find($request->user()->organization_id),
+                [Organization::find(Project::find($request->project_id)->organization_id),
                 Team::find($request->team_id),
                 $request->project_id],
             )
@@ -70,7 +71,7 @@ class TaskController extends Controller
         if (
             ! Gate::allows(
                 'my-organization-and-admin-or-moderator-on-project-or-creator', 
-                [Organization::find($request->user()->organization_id),
+                [Organization::find(Project::find($task->project_id)->organization_id),
                 $task,
                 $task->project_id],
             )
@@ -90,7 +91,7 @@ class TaskController extends Controller
         if (
             ! Gate::allows(
                 'my-organization-and-admin-or-moderator-on-project-or-creator', 
-                [Organization::find($request->user()->organization_id),
+                [Organization::find(Project::find($task->project_id)->organization_id),
                 $task,
                 $task->project_id],
             )
@@ -116,7 +117,7 @@ class TaskController extends Controller
         if (
             ! Gate::allows(
                 'my-organization-and-admin-or-moderator-team-member-or-self',
-                [Organization::find($request->user()->organization_id),
+                [Organization::find(Project::find($task->project_id)->organization_id),
                 Team::find($task->team_id),
                 $user],
             )

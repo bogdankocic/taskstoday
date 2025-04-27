@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TaskNoteResource extends JsonResource
+class ProjectChatMessageResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,9 +14,11 @@ class TaskNoteResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'task_id' => $this->task_id,
             'text' => $this->text,
-            'created_at' => $this->created_at,
+            'user' => new UserResource($this->user),
+            'project' => new ProjectResource($this->whenLoaded('project')),
+            'created_at' => $this->created_at->toDateTimeString(),
+            'updated_at' => $this->updated_at->toDateTimeString(),
         ];
     }
 }
