@@ -2,14 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
 
-class UserAchievement extends Pivot
+class UserAchievement extends Model
 {
     /**
      * Indicates database table for the model.
      */
     protected $table = 'user_achievement';
+
+    /**
+     * Indicates if the model should be timestamped.
+     */
+    public $timestamps = false;
 
     /**
      * Get the achievement that user achievement belongs to.

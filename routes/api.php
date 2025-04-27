@@ -10,6 +10,8 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProjectChatMessageController;
+use App\Http\Controllers\TaskNoteController;
 
 Route::prefix('auth')->group(function () {
     Route::get('/sanctum', function (Request $request) {
@@ -76,4 +78,14 @@ Route::prefix('files')->group(function () {
     Route::delete('/', [FileController::class, 'delete'])->middleware('auth:sanctum');
     Route::get('/{projectFile}/projects/download', [FileController::class, 'downloadProjectFile'])->middleware('auth:sanctum');
     Route::get('/{taskFile}/tasks/download', [FileController::class, 'downloadTaskFile'])->middleware('auth:sanctum');
+});
+
+Route::prefix('task-notes')->group(function () {
+    Route::post('/tasks/{task}', [TaskNoteController::class, 'create'])->middleware('auth:sanctum');
+    Route::get('/tasks/{task}', [TaskNoteController::class, 'get'])->middleware('auth:sanctum');
+});
+
+Route::prefix('chat-messages')->group(function () {
+    Route::post('/projects/{project}', [ProjectChatMessageController::class, 'create'])->middleware('auth:sanctum');
+    Route::get('/projects/{project}', [ProjectChatMessageController::class, 'get'])->middleware('auth:sanctum');
 });
