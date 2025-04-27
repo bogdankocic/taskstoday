@@ -26,14 +26,13 @@ class OrganizationRepository extends BaseRepository
     );
     }
 
-    public function delete(int $id): void
+    public function delete(Organization $organization): void
     {
-        Organization::find($id)->delete();
+        $organization->delete();
     }
 
-    public function update(int $id, OrganizationUpdateRequest $request): OrganizationResource
+    public function update(Organization $organization, OrganizationUpdateRequest $request): OrganizationResource
     {
-        $organization = Organization::find($id);
         $organization->name = $request->name;
         $organization->email = $request->email;
         $organization->profile_photo = $request->profile_photo ?? null;
@@ -53,8 +52,8 @@ class OrganizationRepository extends BaseRepository
         return Organization::find($id);
     }
 
-    public function getOne(int $id): OrganizationResource
+    public function getOne(Organization $organization): OrganizationResource
     {
-        return new OrganizationResource(Organization::find($id));
+        return new OrganizationResource($organization);
     }
 }

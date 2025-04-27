@@ -43,15 +43,13 @@ class ProjectRepository extends BaseRepository
         return new ProjectResource($project);
     }
 
-    public function delete(int $id, Request $request): void
+    public function delete(Project $project, Request $request): void
     {
-        Project::find($id)->delete();
+        $project->delete();
     }
 
-    public function update(int $id, ProjectUpdateRequest $request): ProjectResource
+    public function update(Project $project, ProjectUpdateRequest $request): ProjectResource
     {
-        $project = Project::find($id);
-
         $project->title = $request->title;
         $project->description = $request->description;
 
@@ -79,10 +77,8 @@ class ProjectRepository extends BaseRepository
         return ProjectResource::collection($projects);
     }
 
-    public function finish(int $id, Request $request): ProjectResource
+    public function finish(Project $project, Request $request): ProjectResource
     {
-        $project = Project::find($id);
-
         $project->status = ProjectStatusesEnum::FINISHED->value;
         $project->save();
 

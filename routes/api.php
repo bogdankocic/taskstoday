@@ -23,31 +23,31 @@ Route::prefix('auth')->group(function () {
 Route::prefix('organizations')->group(function () {
     Route::get('/', [OrganizationsController::class, 'get'])->middleware('auth:sanctum');
     Route::post('/', [OrganizationsController::class, 'create'])->middleware('auth:sanctum');
-    Route::get('/{id}', [OrganizationsController::class, 'getOne'])->middleware('auth:sanctum');
-    Route::post('/{id}', [OrganizationsController::class, 'update'])->middleware('auth:sanctum');
-    Route::delete('/{id}', [OrganizationsController::class, 'delete'])->middleware('auth:sanctum');
+    Route::get('/{organization}', [OrganizationsController::class, 'getOne'])->middleware('auth:sanctum');
+    Route::post('/{organization}', [OrganizationsController::class, 'update'])->middleware('auth:sanctum');
+    Route::delete('/{organization}', [OrganizationsController::class, 'delete'])->middleware('auth:sanctum');
 });
 
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'get'])->middleware('auth:sanctum');
     Route::post('/self-update', [UserController::class, 'selfUpdate'])->middleware('auth:sanctum');
-    Route::delete('/{id}', [UserController::class, 'delete'])->middleware('auth:sanctum');
+    Route::delete('/{user}', [UserController::class, 'delete'])->middleware('auth:sanctum');
 });
 
 Route::prefix('projects')->group(function () {
     Route::get('/', [ProjectController::class, 'get'])->middleware('auth:sanctum');
     Route::post('/', [ProjectController::class, 'create'])->middleware('auth:sanctum');
-    Route::post('/{id}', [ProjectController::class, 'update'])->middleware('auth:sanctum');
-    Route::post('/{id}/finish', [ProjectController::class, 'finish'])->middleware('auth:sanctum');
-    Route::delete('/{id}', [ProjectController::class, 'delete'])->middleware('auth:sanctum');
+    Route::post('/{project}', [ProjectController::class, 'update'])->middleware('auth:sanctum');
+    Route::post('/{project}/finish', [ProjectController::class, 'finish'])->middleware('auth:sanctum');
+    Route::delete('/{project}', [ProjectController::class, 'delete'])->middleware('auth:sanctum');
 });
 
 Route::prefix('teams')->group(function () {
     Route::post('/', [TeamController::class, 'create'])->middleware('auth:sanctum');
-    Route::post('/{id}', [TeamController::class, 'updateName'])->middleware('auth:sanctum');
-    Route::delete('/{id}', [TeamController::class, 'delete'])->middleware('auth:sanctum');
-    Route::post('/{teamId}/members/{userId}', [TeamController::class, 'addMember'])->middleware('auth:sanctum');
-    Route::delete('/{teamId}/members/{userId}', [TeamController::class, 'removeMember'])->middleware('auth:sanctum');
+    Route::post('/{team}', [TeamController::class, 'updateName'])->middleware('auth:sanctum');
+    Route::delete('/{team}', [TeamController::class, 'delete'])->middleware('auth:sanctum');
+    Route::post('/{team}/members/{user}', [TeamController::class, 'addMember'])->middleware('auth:sanctum');
+    Route::delete('/{team}/members/{user}', [TeamController::class, 'removeMember'])->middleware('auth:sanctum');
 });
 
 Route::prefix('tasks')->group(function () {
