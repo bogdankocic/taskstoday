@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\OrganizationsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
@@ -66,4 +67,13 @@ Route::prefix('tasks')->group(function () {
 Route::prefix('notifications')->group(function () {
     Route::get('/', [NotificationController::class, 'get'])->middleware('auth:sanctum');
     Route::post('/seen', [NotificationController::class, 'markAsSeen'])->middleware('auth:sanctum');
+});
+
+Route::prefix('files')->group(function () {
+    Route::post('/', [FileController::class, 'upload'])->middleware('auth:sanctum');
+    Route::get('/projects/{project}', [FileController::class, 'getByProject'])->middleware('auth:sanctum');
+    Route::get('/tasks/{task}', [FileController::class, 'getByTask'])->middleware('auth:sanctum');
+    Route::delete('/', [FileController::class, 'delete'])->middleware('auth:sanctum');
+    Route::get('/{projectFile}/projects/download', [FileController::class, 'downloadProjectFile'])->middleware('auth:sanctum');
+    Route::get('/{taskFile}/tasks/download', [FileController::class, 'downloadTaskFile'])->middleware('auth:sanctum');
 });

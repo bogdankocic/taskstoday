@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MarkAsSeenRequest;
-use App\Http\Requests\NotificationCreateRequest;
-use App\Models\Notification;
 use App\Repositories\NotificationRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class NotificationController extends Controller
 {
