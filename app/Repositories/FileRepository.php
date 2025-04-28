@@ -10,7 +10,6 @@ use App\Models\Project;
 use App\Models\ProjectFile;
 use App\Models\Task;
 use App\Models\TaskFile;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 

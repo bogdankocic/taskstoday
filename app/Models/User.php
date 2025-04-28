@@ -23,6 +23,7 @@ class User extends Authenticatable
         'tasks_completed_count',
         'login_strike',
         'login_after_hours_count',
+        'last_login_at',
         'is_verified',
         'role_id',
         'organization_id',
