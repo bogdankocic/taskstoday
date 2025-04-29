@@ -18,24 +18,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Role::factory()->create([
-        //     'id' => 1,
-        //     'name' => RolesEnum::ADMIN->value,
-        // ]);
+        Role::factory()->create([
+            'id' => 1,
+            'name' => RolesEnum::ADMIN->value,
+        ]);
 
-        // Role::factory()->create([
-        //     'id' => 2,
-        //     'name' => RolesEnum::USER->value,
-        // ]);
+        Role::factory()->create([
+            'id' => 2,
+            'name' => RolesEnum::USER->value,
+        ]);
 
-        // User::factory()->create([
-        //     'first_name' => 'Admin',
-        //     'last_name' => 'Admin',
-        //     'email' => 'admin@adminfactory.com',
-        //     'role_id' => 1,
-        //     'is_verified' => true,
-        //     'last_login_at' => now(),
-        // ]);
+        User::factory()->create([
+            'first_name' => 'Admin',
+            'last_name' => 'Admin',
+            'email' => 'admin@adminfactory.com',
+            'role_id' => 1,
+            'is_verified' => true,
+            'last_login_at' => now(),
+        ]);
 
         Tag::factory()->create([
             'id' => TagsIdsEnum::Active->value,
