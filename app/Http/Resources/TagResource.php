@@ -17,7 +17,7 @@ class TagResource extends JsonResource
             'title' => $this->title,
             'color' => $this->color,
             'border_color' => $this->border_color,
-            'favicon' => $this->favicon,
+            'favicon' => asset($this->favicon),
         ];
     }
 }

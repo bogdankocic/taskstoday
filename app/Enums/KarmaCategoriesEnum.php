@@ -84,4 +84,19 @@ enum KarmaCategoriesEnum: string
 
         throw new \ValueError("No KarmaCategory for score {$score}");
     }
+
+    public static function tillNext(int $karma): ?int
+    {
+        $current = self::fromScore($karma);
+        $cases = self::cases();
+        $currentIndex = array_search($current, $cases, true);
+        
+        // Check if current category is the last one
+        if ($currentIndex === false || $currentIndex === count($cases) - 1) {
+            return null;
+        }
+        
+        $nextCategory = $cases[$currentIndex + 1];
+        return max($nextCategory->minScore() - $karma, 0);
+    }
 }

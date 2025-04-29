@@ -34,6 +34,7 @@ Route::prefix('organizations')->group(function () {
 
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'get'])->middleware('auth:sanctum');
+    Route::get('/self', [UserController::class, 'self'])->middleware('auth:sanctum');
     Route::post('/self-update', [UserController::class, 'selfUpdate'])->middleware('auth:sanctum');
     Route::delete('/{user}', [UserController::class, 'delete'])->middleware('auth:sanctum');
 });

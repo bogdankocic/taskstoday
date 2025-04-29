@@ -73,6 +73,11 @@ class UserRepository extends BaseRepository
         }
     }
 
+    public function self(Request $request): UserResource
+    {
+        return new UserResource($request->user()->load(['teams', 'tasks', 'achievements', 'tags']));
+    }
+
     public function getOneModel(int $id): User
     {
         return User::find($id);

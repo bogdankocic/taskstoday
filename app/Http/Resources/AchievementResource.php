@@ -14,7 +14,9 @@ class AchievementResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'condition' => $this->condition,
+            'title' => $this->title,
+            'description' => $this->description,
+            'favicon' => asset($this->favicon),
         ];
     }
 }
