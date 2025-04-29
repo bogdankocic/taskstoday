@@ -28,6 +28,15 @@ class UserController extends Controller
     }
 
     /**
+     * Get self data users.
+     */
+    public function self(Request $request): JsonResponse
+    {
+        $users = $this->userRepository->self($request);
+        return response()->json($users);
+    }
+
+    /**
      * Update the authenticated user.
      */
     public function selfUpdate(UpdateUserRequest $request): JsonResponse
