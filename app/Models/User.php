@@ -21,8 +21,10 @@ class User extends Authenticatable
         'password',
         'karma',
         'tasks_completed_count',
+        'tasks_completed_strike',
         'login_strike',
         'login_after_hours_count',
+        'last_login_at',
         'is_verified',
         'role_id',
         'organization_id',
@@ -43,6 +45,7 @@ class User extends Authenticatable
     protected $attributes = [
         'karma' => 0,
         'tasks_completed_count' => 0,
+        'tasks_completed_strike' => 0,
         'login_strike' => 0,
         'login_after_hours_count' => 0,
         'is_verified' => false,
@@ -84,7 +87,7 @@ class User extends Authenticatable
      */
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'user_project_tag');
+        return $this->belongsToMany(Tag::class, 'user_project_tag')->withPivot(['project_id']);
     }
 
     /**
@@ -109,5 +112,21 @@ class User extends Authenticatable
     public function role()
     {
         return $this->hasOne(Role::class, 'id', 'role_id');
+    }
+
+    /**
+     * The tasks that belong to the user.
+     */
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'performer_id', 'id');
+    }
+
+    /**
+     * The tasks that user created.
+     */
+    public function createdTasks()
+    {
+        return $this->hasMany(Task::class, 'creator_id', 'id');
     }
 }

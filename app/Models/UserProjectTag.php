@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
 
-class UserProjectTag extends Pivot
+class UserProjectTag extends Model
 {
     /**
      * Indicates database table for the model.
