@@ -6,13 +6,20 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class TeamMember extends Pivot
 {
+    /**
+     * Indicates database table for the model.
+     */
     protected $table = 'team_member';
+
+    /**
+     * Indicates if the model should be timestamped.
+     */
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
      */
     protected $fillable = [
-        'teamrole', 
         'joined_at', 
         'team_id', 
         'user_id'

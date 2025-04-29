@@ -4,8 +4,8 @@ namespace App\Enums;
 
 enum RolesEnum: string
 {
-    case ADMIN     = 'admin';
-    case USER      = 'user';
+    case ADMIN = 'admin';
+    case USER  = 'user';
 
     /**
      * Return all values as an array.

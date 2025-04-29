@@ -57,9 +57,9 @@ class UserRepository extends BaseRepository
         return new UserResource($user);
     }
 
-    public function delete($id): void
+    public function delete(User $user): void
     {
-        User::find($id)->delete();
+        $user->delete();
     }
 
     public function get(Request $request): ResourceCollection
@@ -71,6 +71,11 @@ class UserRepository extends BaseRepository
         } else {
             return UserResource::collection(User::where('organization_id', $user->organization_id)->get());
         }
+    }
+
+    public function self(Request $request): UserResource
+    {
+        return new UserResource($request->user()->load(['teams', 'tasks', 'achievements', 'tags']));
     }
 
     public function getOneModel(int $id): User

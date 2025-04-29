@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OrganizationCreateRequest;
 use App\Http\Requests\OrganizationUpdateRequest;
-use App\Http\Resources\OrganizationResource;
+use App\Models\Organization;
 use App\Repositories\OrganizationRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
@@ -18,29 +18,38 @@ class OrganizationsController extends Controller
         $this->organizationRepository = $organizationRepository;
     }
 
+    /**
+     * Get all organizations.
+     */
     public function get(): JsonResponse
     {
-        if (! Gate::allows('admin-only')) {
+        if (! Gate::allows('app-admin-only')) {
             abort(403, 'Unauthorized.');
         }
 
         return response()->json($this->organizationRepository->get());
     }
 
-    public function getOne(int $id): JsonResponse
+    /**
+     * Get a single organization by ID.
+     */
+    public function getOne(Organization $organization): JsonResponse
     {
-        $organization = $this->organizationRepository->getOneModel($id);
+        $organization = $this->organizationRepository->getOne($organization);
 
         if (! Gate::allows('my-organization', $organization)) {
             abort(403, 'Unauthorized.');
         }
 
-        return response()->json(new OrganizationResource($organization));
+        return response()->json($organization);
     }
 
+    /**
+     * Create a new organization.
+     */
     public function create(OrganizationCreateRequest $request): JsonResponse
     {
-        if (! Gate::allows('admin-only')) {
+        if (! Gate::allows('app-admin-only')) {
             abort(403, 'Unauthorized.');
         }
 
@@ -48,25 +57,32 @@ class OrganizationsController extends Controller
         return response()->json($organization, 201);
     }
 
-    public function update(int $id, OrganizationUpdateRequest $request): JsonResponse
+    /**
+     * Update an existing organization by ID.
+     */
+    public function update(Organization $organization, OrganizationUpdateRequest $request): JsonResponse
     {
-        $organization = $this->organizationRepository->getOneModel($id);
+        $organization = $this->organizationRepository->getOneModel($organization->id);
 
         if (! Gate::allows('my-organization-and-admin', $organization)) {
             abort(403, 'Unauthorized.');
         }
 
-        $organization = $this->organizationRepository->update($id, $request);
+        $organization = $this->organizationRepository->update($organization, $request);
         return response()->json($organization);
     }
 
-    public function delete(int $id): JsonResponse
+    /**
+     * Delete an organization by ID.
+     * Only accessible by users with the 'admin-only' permission.
+     */
+    public function delete(Organization $organization): JsonResponse
     {
-        if (! Gate::allows('admin-only')) {
+        if (! Gate::allows('app-admin-only')) {
             abort(403, 'Unauthorized.');
         }
 
-        $this->organizationRepository->delete($id);
+        $this->organizationRepository->delete($organization);
         return response()->json(['message' => 'Organization deleted successfully'], 200);
     }
 }

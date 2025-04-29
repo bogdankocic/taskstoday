@@ -9,6 +9,13 @@ class Team extends Model
 {
     use SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = [
+        'title', 
+        'project_id',
+    ];
         
     /**
      * Get the attributes that should be cast.
@@ -32,6 +39,7 @@ class Team extends Model
      */
     public function members()
     {
-        return $this->hasMany(TeamMember::class);
+        return $this->belongsToMany(User::class, 'team_member')
+            ->withPivot('joined_at');
     }
 }
