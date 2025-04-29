@@ -134,15 +134,6 @@ class TaskController extends Controller
      */
     public function assignContributor(Task $task, User $user, Request $request): JsonResponse
     {
-        if(
-            !$task->team->members->contains('id', $user->id) || 
-            $task->performer_id === $user->id
-        ) {
-            throw new HttpResponseException(response()->json([
-                'message' => 'Cannot assign user.',
-            ], 400));
-        }
-
         if (
             ! Gate::allows(
                 'performer-only',
@@ -150,6 +141,15 @@ class TaskController extends Controller
             )
         ) {
             abort(403, 'Unauthorized.');
+        }
+
+        if(
+            !$task->team->members->contains('id', $user->id) || 
+            $task->performer_id === $user->id
+        ) {
+            throw new HttpResponseException(response()->json([
+                'message' => 'Cannot assign user.',
+            ], 400));
         }
 
         $this->taskRepository->assignContributor($task, $user, $request);
