@@ -2,13 +2,14 @@
 
 namespace App\Providers;
 
-use App\Models\Achievement;
+use App\Models\ProjectChatMessage;
 use App\Models\ProjectFile;
 use App\Models\Task;
 use App\Models\TaskComplexityVote;
 use App\Models\TaskFile;
 use App\Models\TaskNote;
 use App\Models\UserAchievement;
+use App\Observers\ProjectChatMessageObserver;
 use App\Observers\ProjectFileObserver;
 use App\Observers\TaskComplexityVoteObserver;
 use App\Observers\TaskFileObserver;
@@ -37,5 +38,6 @@ class EventServiceProvider extends ServiceProvider
         TaskNote::observe(TaskNoteObserver::class);
         ProjectFile::observe(ProjectFileObserver::class);
         UserAchievement::observe(UserAchievementObserver::class);
+        ProjectChatMessage::observe(ProjectChatMessageObserver::class);
     }
 }

@@ -191,7 +191,7 @@ class TaskController extends Controller
             $task->status !== TaskStatusesEnum::INPROGRESS->value
         ) {
             throw new HttpResponseException(response()->json([
-                'message' => 'Cannot activate task.',
+                'message' => 'Cannot complete task.',
             ], 400));
         }
 
