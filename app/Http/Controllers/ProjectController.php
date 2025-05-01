@@ -30,7 +30,7 @@ class ProjectController extends Controller
         if (
             ! Gate::allows(
                 'my-organization-and-admin-or-moderator', 
-                $this->organizationRepository->getOneModel($request->user()->organization_id)
+                $request->user()->organization
             )
         ) {
             abort(403, 'Unauthorized.');

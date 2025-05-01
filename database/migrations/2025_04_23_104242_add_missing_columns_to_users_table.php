@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('password')->nullable()->change();
             $table->softDeletes();
 
-            $table->foreignId('role_id')->constrained('roles');
+            $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete();
         });
     }
 

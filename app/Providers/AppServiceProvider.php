@@ -38,6 +38,10 @@ class AppServiceProvider extends ServiceProvider
             return $user->organization_id === $organization->id && $user->teamrole === TeamRolesEnum::ADMIN->value;
         });
 
+        Gate::define('my-organization-and-admin-or-moderator', function (User $user, Organization $organization) {
+            return $user->organization_id === $organization->id && in_array($user->teamrole, [TeamRolesEnum::ADMIN->value, TeamRolesEnum::MODERATOR->value]);
+        });
+
         Gate::define('my-organization-and-admin-or-moderator-on-project-or-user-team-member', function (
             User $user, 
             Organization $organization,

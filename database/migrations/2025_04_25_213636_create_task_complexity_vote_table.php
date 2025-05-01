@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('task_complexity_vote', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('task_id')->constrained('tasks');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
         });
     }
 
