@@ -14,7 +14,7 @@ class UserInviteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->userAuthorized($this->user());
+        return true;
     }
 
     /**
@@ -35,19 +35,5 @@ class UserInviteRequest extends FormRequest
         }
 
         return $rules;
-    }
-
-    /**
-     * Checks all required conditios to see if passed user is authorized to make this request.
-     */
-    private function userAuthorized(User $user): bool
-    {
-        if($user->role->name === RolesEnum::ADMIN->value) {
-            return true;
-        } else {
-            return $user->organization_id === $this->input('organization_id');
-        }
-
-        return true;
     }
 }

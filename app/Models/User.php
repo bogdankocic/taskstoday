@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,7 +11,14 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes, HasApiTokens, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes, HasApiTokens, Notifiable, CascadeSoftDeletes;
+
+    /**
+     * Relations to cascade on delete.
+     *
+     * @var array
+     */
+    protected $cascadeDeletes = ['notes'];
 
     /**
      * The attributes that are mass assignable.
@@ -128,5 +136,13 @@ class User extends Authenticatable
     public function createdTasks()
     {
         return $this->hasMany(Task::class, 'creator_id', 'id');
+    }
+
+    /**
+     * The notes that user created.
+     */
+    public function notes()
+    {
+        return $this->hasMany(TaskNote::class);
     }
 }

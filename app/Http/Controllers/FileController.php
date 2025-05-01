@@ -52,13 +52,16 @@ class FileController extends Controller
      */
     public function delete(FileDeleteRequest $request): JsonResponse
     {
-        $projectId = $request->id;
+        $file = null;
+        $project = null;
 
         if($request->type === 'task') {
-            $projectId = Task::find($projectId)->project_id;
+            $file = TaskFile::find($request->id);
+            $project = $file->task->project;
+        } else {
+            $file = ProjectFile::find($request->id);
+            $project = $file->project;
         }
-
-        $project = Project::find($projectId);
         
         if (! Gate::allows('my-organization-and-admin-or-moderator-and-user-on-project', [$project->organization, $project])) {
             abort(403, 'Unauthorized.');

@@ -15,13 +15,13 @@ class OrganizationRepository extends BaseRepository
         parent::__construct($model);
     }
 
-    public function create(OrganizationCreateRequest $request): OrganizationResource
+    public function create(OrganizationCreateRequest $request, string|null $profilePhotoPath): OrganizationResource
     {
         return new OrganizationResource(
             Organization::create([
             'name' => $request->name,
             'email' => $request->email,
-            'profile_photo' => $request->profile_photo ?? null,
+            'profile_photo' => $profilePhotoPath,
         ])
     );
     }
@@ -31,11 +31,11 @@ class OrganizationRepository extends BaseRepository
         $organization->delete();
     }
 
-    public function update(Organization $organization, OrganizationUpdateRequest $request): OrganizationResource
+    public function update(Organization $organization, OrganizationUpdateRequest $request, string|null $profilePhotoPath): OrganizationResource
     {
         $organization->name = $request->name;
         $organization->email = $request->email;
-        $organization->profile_photo = $request->profile_photo ?? null;
+        $organization->profile_photo = $profilePhotoPath;
 
         $organization->save();
 

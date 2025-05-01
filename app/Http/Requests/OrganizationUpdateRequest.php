@@ -21,7 +21,7 @@ class OrganizationUpdateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:organizations,email,' . $this->route('id'),
+            'email' => 'required|email|unique:organizations,email,' . $this->route('organization')->id,
             'profile_photo' => 'nullable|string|max:255',
         ];
     }

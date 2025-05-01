@@ -2,12 +2,20 @@
 
 namespace App\Models;
 
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Organization extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, CascadeSoftDeletes;
+
+    /**
+     * Relations to cascade on delete.
+     *
+     * @var array
+     */
+    protected $cascadeDeletes = ['projects', 'users'];
 
     /**
      * The attributes that are mass assignable.
