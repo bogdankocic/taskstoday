@@ -51,7 +51,11 @@ class OrganizationsController extends Controller
             abort(403, 'Unauthorized.');
         }
 
-        $organization = $this->organizationRepository->create($request);
+        if($request->profile_photo) {
+            $profilePhotoPath = request()->file('profile_photo')->store("uploads/organizations", config('filesystems.default'));
+        }
+
+        $organization = $this->organizationRepository->create($request, $profilePhotoPath ?? null);
         return response()->json($organization, 201);
     }
 
@@ -64,7 +68,11 @@ class OrganizationsController extends Controller
             abort(403, 'Unauthorized.');
         }
 
-        $organization = $this->organizationRepository->update($organization, $request);
+        if($request->profile_photo) {
+            $profilePhotoPath = request()->file('profile_photo')->store("uploads/organizations", config('filesystems.default'));
+        }
+
+        $organization = $this->organizationRepository->update($organization, $request, $profilePhotoPath ?? null);
         return response()->json($organization);
     }
 

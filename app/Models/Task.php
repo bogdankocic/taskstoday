@@ -2,12 +2,20 @@
 
 namespace App\Models;
 
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, CascadeSoftDeletes;
+
+    /**
+     * Relations to cascade on delete.
+     *
+     * @var array
+     */
+    protected $cascadeDeletes = ['notes', 'files', 'votes'];
 
     /**
      * The attributes that are mass assignable.
@@ -86,5 +94,13 @@ class Task extends Model
     public function files()
     {
         return $this->hasMany(TaskFile::class);
+    }
+
+    /**
+     * Get the votes for the task.
+     */
+    public function votes()
+    {
+        return $this->hasMany(TaskComplexityVote::class);
     }
 }

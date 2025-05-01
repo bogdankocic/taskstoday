@@ -49,7 +49,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
         });
 
         Schema::create('projects', function (Blueprint $table) {
@@ -60,7 +60,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreignId('organization_id')->constrained('organizations');
+            $table->foreignId('organization_id')->constrained('organizations')->cascadeOnDelete();
         });
 
         Schema::create('teams', function (Blueprint $table) {
@@ -68,7 +68,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreignId('project_id')->constrained('projects');
+            $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete();
         });
 
         Schema::create('tasks', function (Blueprint $table) {
@@ -79,8 +79,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreignId('project_id')->constrained('projects');
-            $table->foreignId('creator_id')->constrained('users');
+            $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete();
+            $table->foreignId('creator_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('performer_id')->nullable()->constrained('users');
             $table->foreignId('contributor_id')->nullable()->constrained('users');
         });
@@ -90,8 +90,8 @@ return new class extends Migration
             $table->string('teamrole');
             $table->timestamp('joined_at');
 
-            $table->foreignId('team_id')->constrained('teams');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('team_id')->constrained('teams')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
         });
 
         Schema::create('task_notes', function (Blueprint $table) {
@@ -100,37 +100,37 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreignId('task_id')->constrained('tasks');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
         });
         
         Schema::create('user_achievement', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('achievement_id')->constrained('achievements');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('achievement_id')->constrained('achievements')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
         });
 
         Schema::create('user_project_tag', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('tag_id')->constrained('tags');
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('project_id')->constrained('projects');
+            $table->foreignId('tag_id')->constrained('tags')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete();
         });
 
         Schema::create('task_file', function (Blueprint $table) {
             $table->id();
             $table->string('title');
 
-            $table->foreignId('task_id')->constrained('tasks');
+            $table->foreignId('task_id')->constrained('tasks')->cascadeOnDelete();
         });
 
         Schema::create('project_file', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             
-            $table->foreignId('project_id')->constrained('projects');
+            $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete();
         });
     }
 

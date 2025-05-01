@@ -2,12 +2,20 @@
 
 namespace App\Models;
 
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, CascadeSoftDeletes;
+
+    /**
+     * Relations to cascade on delete.
+     *
+     * @var array
+     */
+    protected $cascadeDeletes = ['teams', 'tasks', 'files', 'chatMessages'];
 
     /**
      * The attributes that are mass assignable.
@@ -58,5 +66,13 @@ class Project extends Model
     public function files()
     {
         return $this->hasMany(ProjectFile::class);
+    }
+
+    /**
+     * Get the chat messages for the project.
+     */
+    public function chatMessages()
+    {
+        return $this->hasMany(ProjectChatMessage::class);
     }
 }

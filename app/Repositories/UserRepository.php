@@ -44,15 +44,13 @@ class UserRepository extends BaseRepository
         ]);
     }
 
-    public function selfUpdate(UpdateUserRequest $request): UserResource
+    public function selfUpdate(UpdateUserRequest $request, string|null $profilePhotoPath): UserResource
     {
         $user = $request->user();
 
         $user->first_name = $request->input('first_name');
         $user->last_name = $request->input('last_name');
-        $user->profile_photo = $request->file('profile_photo') ? 
-            $request->file('profile_photo')->store('profile_photos') : null;
-        $user->save();
+        $user->profile_photo = $profilePhotoPath;
 
         return new UserResource($user);
     }
