@@ -6,14 +6,13 @@ enum AchievementsIdsEnum: int
 {
     case JustCame = 1;
     case FirstTask = 2;
-    case ProductiveDay = 3;
-    case Organizer = 4;
-    case NightBird = 5;
-    case Commited = 6;
-    case TeamPlayer = 7;
-    case Maraton = 8;
-    case Visionary = 9;
-    case Legend = 10;
+    case Organizer = 3;
+    case NightBird = 4;
+    case Commited = 5;
+    case TeamPlayer = 6;
+    case Maraton = 7;
+    case Visionary = 8;
+    case Legend = 9;
     
 
     /**
