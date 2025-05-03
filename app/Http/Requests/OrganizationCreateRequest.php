@@ -21,8 +21,6 @@ class OrganizationCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:organizations,email,',
-            'profile_photo' => 'nullable|string|max:255',
         ];
     }
 }

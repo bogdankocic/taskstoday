@@ -86,6 +86,25 @@ class ProjectController extends Controller
     }
 
     /**
+     * Get members of a project.
+     */
+    public function getMembers(Project $project): JsonResponse
+    {
+        $members = $this->projectRepository->getMembers($project);
+        return response()->json($members);
+    }
+
+    /**
+     * Get teams of a project.
+     */
+    public function getTeams(Project $project): JsonResponse
+    {
+        $teams = $this->projectRepository->getTeams($project);
+        return response()->json($teams);
+    }
+
+
+    /**
      * Get all projects.
      */
     public function finish(Project $project, Request $request): JsonResponse

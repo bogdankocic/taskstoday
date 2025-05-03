@@ -14,10 +14,10 @@ class TeamResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'title' => $this->title,
             'project_id' => $this->project_id,
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'deleted_at' => $this->deleted_at,
+            'members' => UserResource::collection($this->whenLoaded('members')),
         ];
     }
 }

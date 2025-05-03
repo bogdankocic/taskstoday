@@ -5,11 +5,13 @@ namespace App\Repositories;
 use App\Http\Requests\TeamCreateRequest;
 use App\Http\Requests\TeamUpdateNameRequest;
 use App\Http\Resources\TeamResource;
+use App\Http\Resources\UserResource;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class TeamRepository extends BaseRepository
 {
@@ -43,6 +45,16 @@ class TeamRepository extends BaseRepository
     public function delete(Team $team, Request $request): void
     {
         $team->delete();
+    }
+
+    public function getMembers(Team $team, Request $request): ResourceCollection
+    {
+        return UserResource::collection($team->members);
+    }
+
+    public function getOne(Team $team): TeamResource
+    {
+        return new TeamResource($team);
     }
 
     public function addMember(Team $team, User $user, Request $request): void

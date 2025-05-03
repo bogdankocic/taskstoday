@@ -78,7 +78,7 @@ class TaskRepository extends BaseRepository
             Cache::forever($cacheKey, $filters);
         }
 
-        $filterableFields = ['team_id', 'complexity'];
+        $filterableFields = ['project_id', 'team_id', 'complexity'];
 
         foreach ($filterableFields as $field) {
             if (!empty($filters[$field])) {

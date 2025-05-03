@@ -41,10 +41,15 @@ class UserInviteNotification extends Notification
             'user_id' => $this->user->id,
         ]);
 
+        $parsedUrl = parse_url($signedUrl);
+        $queryString = $parsedUrl['query'] ?? '';
+        
+        $frontendUrl = config('app.frontend_url') . 'user-activate?' . $queryString;
+
         return (new MailMessage)
             ->subject('Activate Your Account')
             ->line('You have been invited to join our platform.')
-            ->action('Activate Account', $signedUrl)
+            ->action('Activate Account', $frontendUrl)
             ->line('Thank you for using our application!');
     }
 }

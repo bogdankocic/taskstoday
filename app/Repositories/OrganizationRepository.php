@@ -15,13 +15,11 @@ class OrganizationRepository extends BaseRepository
         parent::__construct($model);
     }
 
-    public function create(OrganizationCreateRequest $request, string|null $profilePhotoPath): OrganizationResource
+    public function create(OrganizationCreateRequest $request): OrganizationResource
     {
         return new OrganizationResource(
             Organization::create([
             'name' => $request->name,
-            'email' => $request->email,
-            'profile_photo' => $profilePhotoPath,
         ])
     );
     }

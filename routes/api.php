@@ -43,14 +43,18 @@ Route::prefix('projects')->group(function () {
     Route::get('/', [ProjectController::class, 'get'])->middleware('auth:sanctum');
     Route::post('/', [ProjectController::class, 'create'])->middleware('auth:sanctum');
     Route::post('/{project}', [ProjectController::class, 'update'])->middleware('auth:sanctum');
+    Route::get('/{project}/members', [ProjectController::class, 'getMembers'])->middleware('auth:sanctum');
+    Route::get('/{project}/teams', [ProjectController::class, 'getTeams'])->middleware('auth:sanctum');
     Route::post('/{project}/finish', [ProjectController::class, 'finish'])->middleware('auth:sanctum');
     Route::delete('/{project}', [ProjectController::class, 'delete'])->middleware('auth:sanctum');
 });
 
 Route::prefix('teams')->group(function () {
     Route::post('/', [TeamController::class, 'create'])->middleware('auth:sanctum');
+    Route::get('/{team}', [TeamController::class, 'getOne'])->middleware('auth:sanctum');
     Route::post('/{team}', [TeamController::class, 'updateName'])->middleware('auth:sanctum');
     Route::delete('/{team}', [TeamController::class, 'delete'])->middleware('auth:sanctum');
+    Route::get('/{team}/members', [TeamController::class, 'getMembers'])->middleware('auth:sanctum');
     Route::post('/{team}/members/{user}', [TeamController::class, 'addMember'])->middleware('auth:sanctum');
     Route::delete('/{team}/members/{user}', [TeamController::class, 'removeMember'])->middleware('auth:sanctum');
 });
