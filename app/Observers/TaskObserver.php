@@ -6,6 +6,7 @@ use App\Enums\AchievementsIdsEnum;
 use App\Enums\KarmaCategoriesEnum;
 use App\Enums\TagsIdsEnum;
 use App\Enums\TaskStatusesEnum;
+use App\Models\Notification;
 use App\Models\ProjectChatMessage;
 use App\Models\Task;
 use App\Models\UserProjectTag;
@@ -46,6 +47,24 @@ class TaskObserver
             ->get();
 
         $allUserNotCompletedTasks = $user->tasks()->whereNot('status', TaskStatusesEnum::COMPLETED->value)->get();
+
+        if ($task->wasChanged('performer_id')) {
+            Notification::create([
+                'title' => "Task assigned", 
+                'content' => "You have been assigned to a task {$task->name}", 
+                'is_seen' => false, 
+                'user_id' => $task->performer_id,
+            ]);
+        }
+
+        if ($task->wasChanged('contributor_id')) {
+            Notification::create([
+                'title' => "Help requested", 
+                'content' => "You have been assigned to help with a task {$task->name}", 
+                'is_seen' => false, 
+                'user_id' => $task->contributor_id,
+            ]);
+        }
 
         if ($task->wasChanged('status')) {
             if ($task->status === TaskStatusesEnum::INPROGRESS->value) {

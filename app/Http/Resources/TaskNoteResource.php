@@ -15,6 +15,7 @@ class TaskNoteResource extends JsonResource
         return [
             'id' => $this->id,
             'task_id' => $this->task_id,
+            'user' => new UserResource($this->whenLoaded('user')),
             'text' => $this->text,
             'created_at' => $this->created_at,
         ];

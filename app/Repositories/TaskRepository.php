@@ -55,7 +55,7 @@ class TaskRepository extends BaseRepository
     public function get(array $filters, Request $request): ResourceCollection
     {
         $user = $request->user();
-        $query = Task::query();
+        $query = Task::with(['creator', 'performer', 'contributor', 'files']);
 
         if($user->teamrole === TeamRolesEnum::ADMIN->value) {
             $query->join('projects', 'tasks.project_id', '=', 'projects.id')

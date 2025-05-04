@@ -27,7 +27,8 @@ class TaskNoteRepository extends BaseRepository
 
     public function get(Task $task, Request $request): ResourceCollection
     {
-        return TaskNoteResource::collection(TaskNote::where('task_id', $task->id)
+        return TaskNoteResource::collection(TaskNote::with('user')
+            ->where('task_id', $task->id)
             ->orderBy('created_at', 'desc')
             ->get());
     }
