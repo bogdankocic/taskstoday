@@ -74,6 +74,7 @@ class TaskRepository extends BaseRepository
         if($filters['save_filter']) {
             $cacheKey = "task-filter-{$request->user()->id}";
         
+            unset($filters['project_id']);
             unset($filters['save_filter']);
             Cache::forever($cacheKey, $filters);
         }

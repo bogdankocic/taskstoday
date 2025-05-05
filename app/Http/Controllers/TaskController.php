@@ -32,6 +32,7 @@ class TaskController extends Controller
     public function get(Request $request): JsonResponse
     {
         $filters = [
+            'project_id' => $request->query('project_id'),
             'team_id' => $request->query('team_id'),
             'complexity' => $request->query('complexity'),
             'sort_by_time' => $request->query('sort_by_time'),
