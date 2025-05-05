@@ -42,10 +42,6 @@ class TaskObserver
         $user = $task->creator;
         $performer = $task->performer;
 
-        $projectTasksForUser = $task->project->tasks()
-            ->where('performer_id', $performer->id)
-            ->get();
-
         $allUserNotCompletedTasks = $user->tasks()->whereNot('status', TaskStatusesEnum::COMPLETED->value)->get();
 
         if ($task->wasChanged('performer_id')) {
@@ -76,6 +72,10 @@ class TaskObserver
             }
     
             if ($task->status === TaskStatusesEnum::COMPLETED->value) {
+                $projectTasksForUser = $task->project->tasks()
+                    ->where('performer_id', $performer->id)
+                    ->get();
+
                 $user->tasks_completed_count++;
                 $achievementsToAttach = [];
                 $contributorAchievementsToAttach = [];

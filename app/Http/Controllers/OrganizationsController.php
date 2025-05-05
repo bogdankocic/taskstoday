@@ -64,6 +64,8 @@ class OrganizationsController extends Controller
             abort(403, 'Unauthorized.');
         }
 
+        $profilePhotoPath = null;
+
         if($request->profile_photo) {
             $profilePhotoPath = request()->file('profile_photo')->store("uploads/organizations", config('filesystems.default'));
         }

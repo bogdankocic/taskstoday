@@ -33,7 +33,10 @@ class OrganizationRepository extends BaseRepository
     {
         $organization->name = $request->name;
         $organization->email = $request->email;
-        $organization->profile_photo = $profilePhotoPath;
+        
+        if($profilePhotoPath) {
+            $organization->profile_photo = $profilePhotoPath;
+        }
 
         $organization->save();
 

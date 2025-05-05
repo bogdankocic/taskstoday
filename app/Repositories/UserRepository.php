@@ -51,8 +51,11 @@ class UserRepository extends BaseRepository
 
         $user->first_name = $request->input('first_name');
         $user->last_name = $request->input('last_name');
-        $user->profile_photo = $profilePhotoPath;
-
+        
+        if($profilePhotoPath) {
+            $user->profile_photo = $profilePhotoPath;
+        }
+        
         $user->save();
 
         return new UserResource($user);
