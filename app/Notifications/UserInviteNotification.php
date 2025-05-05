@@ -44,7 +44,7 @@ class UserInviteNotification extends Notification
         $parsedUrl = parse_url($signedUrl);
         $queryString = $parsedUrl['query'] ?? '';
         
-        $frontendUrl = config('app.frontend_url') . 'user-activate?' . $queryString;
+        $frontendUrl = config('app.frontend_url') . '/user-activate?' . $queryString;
 
         return (new MailMessage)
             ->subject('Activate Your Account')
