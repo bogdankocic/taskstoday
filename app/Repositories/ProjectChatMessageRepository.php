@@ -27,8 +27,20 @@ class ProjectChatMessageRepository extends BaseRepository
 
     public function get(Project $project, Request $request): ResourceCollection
     {
-        return ProjectChatMessageResource::collection(ProjectChatMessage::where('project_id', $project->id)
+        $projectMessages = ProjectChatMessage::with('user.tags')
+            ->where('project_id', $project->id)
             ->orderBy('created_at', 'desc')
-            ->get());
+            ->get();
+
+        $projectMessages->each(function ($projectMessage) {
+            $user = $projectMessage->user;
+            if ($user) {
+                $user->setRelation('tags', $user->tags->unique(function ($tag) {
+                    return $tag->pivot->tag_id;
+                })->values());
+            }
+        });
+
+        return ProjectChatMessageResource::collection($projectMessages);
     }
 }

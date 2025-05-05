@@ -85,7 +85,9 @@ class UserRepository extends BaseRepository
         $usersCollection = $users->get();
 
         $usersCollection->each(function ($user) {
-            $user->setRelation('tags', $user->tags->unique('id')->values());
+            $user->setRelation('tags', $user->tags->unique(function ($tag) {
+                return $tag->pivot->tag_id . '-' . $tag->pivot->project_id;
+            })->values());
         });
 
         return UserResource::collection($usersCollection);
@@ -94,7 +96,9 @@ class UserRepository extends BaseRepository
     public function self(Request $request): UserResource
     {
         $user = $request->user()->load(['organization', 'teams', 'tasks', 'achievements', 'tags']);
-        $user->setRelation('tags', $user->tags->unique('id')->values());
+        $user->setRelation('tags', $user->tags->unique(function ($tag) {
+            return $tag->pivot->tag_id . '-' . $tag->pivot->project_id;
+        })->values());
         return new UserResource($user);
     }
 

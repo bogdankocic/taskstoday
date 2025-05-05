@@ -82,7 +82,12 @@ class ProjectRepository extends BaseRepository
 
     public function getMembers(Project $project): ResourceCollection
     {
-        $members = User::where('organization_id', $project->organization_id)->get();
+        $members = User::with(['tags'])->where('organization_id', $project->organization_id)->get();
+        $members->each(function ($user) {
+            $user->setRelation('tags', $user->tags->unique(function ($tag) {
+                return $tag->pivot->tag_id . '-' . $tag->pivot->project_id;
+            })->values());
+        });
         return UserResource::collection($members);
     }
 

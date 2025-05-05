@@ -18,6 +18,8 @@ class TagResource extends JsonResource
             'color' => $this->color,
             'border_color' => $this->border_color,
             'favicon' => asset($this->favicon),
+            'user_id' => $this->pivot->user_id,
+            'project_id' => $this->pivot->project_id,
         ];
     }
 }

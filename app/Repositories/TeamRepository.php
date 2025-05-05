@@ -49,7 +49,13 @@ class TeamRepository extends BaseRepository
 
     public function getMembers(Team $team, Request $request): ResourceCollection
     {
-        return UserResource::collection($team->members);
+        $members = $team->members()->with('tags')->get();
+        $members->each(function ($user) {
+            $user->setRelation('tags', $user->tags->unique(function ($tag) {
+                return $tag->pivot->tag_id . '-' . $tag->pivot->project_id;
+            })->values());
+        });
+        return UserResource::collection($members);
     }
 
     public function getOne(Team $team): TeamResource
