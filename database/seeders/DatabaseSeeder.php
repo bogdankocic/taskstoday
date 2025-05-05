@@ -112,55 +112,55 @@ class DatabaseSeeder extends Seeder
             'id' => AchievementsIdsEnum::JustCame->value,
             'title' => 'Just Came',
             "description" => "Welcome to the team!",     
-            'favicon' => 'storage/tags/just-came.png'
+            'favicon' => 'storage/achievements/just-came.png'
         ]);
         Achievement::factory()->create([
             'id' => AchievementsIdsEnum::FirstTask->value,
             'title' => 'First Task',
             "description" => "Your first step to success!",
-            'favicon' => 'storage/tags/first-task.png'
+            'favicon' => 'storage/achievements/first-task.png'
         ]);
         Achievement::factory()->create([
             'id' => AchievementsIdsEnum::Organizer->value,
             'title' => 'Organizer',
             "description" => "People look up to you.",
-            'favicon' => 'storage/tags/organizer.png'
+            'favicon' => 'storage/achievements/organizer.png'
         ]);
         Achievement::factory()->create([
             'id' => AchievementsIdsEnum::NightBird->value,
             'title' => 'Night Bird',
             "description" => "Active after 18pm more then 10 times, do you even rest?",     
-            'favicon' => 'storage/tags/night-bird.png'
+            'favicon' => 'storage/achievements/night-bird.png'
         ]);
         Achievement::factory()->create([
             'id' => AchievementsIdsEnum::Commited->value,
             'title' => 'Commited',
             "description" => "Work, work, work... You just completed your 50th task.",     
-            'favicon' => 'storage/tags/commited.png'
+            'favicon' => 'storage/achievements/commited.png'
         ]);
         Achievement::factory()->create([
             'id' => AchievementsIdsEnum::TeamPlayer->value,
             'title' => 'Team player',
             "description" => "We can't do it without you.",     
-            'favicon' => 'storage/tags/team-player.png'
+            'favicon' => 'storage/achievements/team-player.png'
         ]);
         Achievement::factory()->create([
             'id' => AchievementsIdsEnum::Maraton->value,
             'title' => 'Maraton',
             "description" => "Watch out, your feet might burn.",     
-            'favicon' => 'storage/tags/maraton.png'
+            'favicon' => 'storage/achievements/maraton.png'
         ]);
         Achievement::factory()->create([
             'id' => AchievementsIdsEnum::Visionary->value,
             'title' => 'Visionary',
             "description" => "True leader. Might be a president one day.",     
-            'favicon' => 'storage/tags/visionary.png'
+            'favicon' => 'storage/achievements/visionary.png'
         ]);
         Achievement::factory()->create([
             'id' => AchievementsIdsEnum::Legend->value,
             'title' => 'Legend',
             "description" => "You are irreplaceable!",     
-            'favicon' => 'storage/tags/legend.png'
+            'favicon' => 'storage/achievements/legend.png'
         ]);
     }
 }

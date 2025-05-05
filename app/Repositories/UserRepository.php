@@ -79,12 +79,20 @@ class UserRepository extends BaseRepository
             $users->where('organization_id', $user->organization_id);
         }
 
-        return UserResource::collection($users->get());
+        $usersCollection = $users->get();
+
+        $usersCollection->each(function ($user) {
+            $user->setRelation('tags', $user->tags->unique('id')->values());
+        });
+
+        return UserResource::collection($usersCollection);
     }
 
     public function self(Request $request): UserResource
     {
-        return new UserResource($request->user()->load(['organization', 'teams', 'tasks', 'achievements', 'tags']));
+        $user = $request->user()->load(['organization', 'teams', 'tasks', 'achievements', 'tags']);
+        $user->setRelation('tags', $user->tags->unique('id')->values());
+        return new UserResource($user);
     }
 
     public function getOneModel(int $id): User

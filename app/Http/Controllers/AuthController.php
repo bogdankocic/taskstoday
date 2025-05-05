@@ -6,6 +6,7 @@ use App\Enums\AchievementsIdsEnum;
 use App\Enums\TagsIdsEnum;
 use App\Http\Requests\UserActivateRequest;
 use App\Http\Requests\UserInviteRequest;
+use App\Models\UserProjectTag;
 use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -74,7 +75,7 @@ class AuthController extends Controller
         }
 
         if (! empty($achievementsToAttach)) {
-            $existingAchievements = $user->achievements()->pluck('id')->toArray();
+            $existingAchievements = $user->achievements->pluck('id')->toArray();
             $newAchievements = array_diff($achievementsToAttach, $existingAchievements);
         
             if (!empty($newAchievements)) {
@@ -94,7 +95,7 @@ class AuthController extends Controller
     {
         $user = $request->user();
         $user->currentAccessToken()->delete();
-        $user->tags()->detach(TagsIdsEnum::Active->value);
+        UserProjectTag::where('user_id', $user->id)->where('tag_id', TagsIdsEnum::Active->value)->delete();
 
         return response()->json(['message' => 'Logged out successfully'], 200);
     }

@@ -143,8 +143,20 @@ class TaskObserver
                         ->where('tag_id', TagsIdsEnum::HelpingHand->value)
                         ->where('project_id', $task->project_id)
                         ->delete();
+
                     $contributor = $task->contributor;
+                    $currentContributorLevel = KarmaCategoriesEnum::fromScore($contributor->karma);
                     $contributor->karma += $task->complexity * 5;
+
+                    $newContributorLevel = KarmaCategoriesEnum::fromScore($contributor->karma);
+                    if ($newContributorLevel->value != $currentContributorLevel->value) {
+                        Notification::create([
+                            'title' => 'New Level Reached',
+                            'content' => "Congratulations! You have reached a new karma level: {$newContributorLevel->name}.",
+                            'user_id' => $contributor->id,
+                            'is_seen' => false,
+                        ]);
+                    }
 
                     if(
                         in_array(
@@ -178,8 +190,17 @@ class TaskObserver
                     }
                 }
         
-
+                $currentUserLevel = KarmaCategoriesEnum::fromScore($user->karma);
                 $user->karma += $task->complexity * 10;
+                $newLevel = KarmaCategoriesEnum::fromScore($user->karma);
+                if ($newLevel->value != $currentUserLevel->value) {
+                    Notification::create([
+                        'title' => 'New Level Reached',
+                        'content' => "Congratulations! You have reached a new karma level: {$newLevel->name}.",
+                        'user_id' => $user->id,
+                        'is_seen' => false,
+                    ]);
+                }
 
                 if(
                     in_array(

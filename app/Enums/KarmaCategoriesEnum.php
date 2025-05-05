@@ -50,6 +50,25 @@ enum KarmaCategoriesEnum: string
         };
     }
 
+    /**
+     * @return int  The number for current level.
+     */
+    public function currentLevelNumber(): int
+    {
+        return match($this) {
+            self::POCETNIK          => 1,
+            self::ISTRAZIVAC        => 2,
+            self::ZANATLIJA          => 3,
+            self::STRUCNJAK         => 4,
+            self::VETERAN           => 5,
+            self::MENTOR            => 6,
+            self::VODJA_TIMA         => 7,
+            self::VIZIONAR          => 8,
+            self::LEGENDA_RARE      => 9,
+            self::LEGENDA_PERMANENT => 10,
+        };
+    }
+
     public function description(): string
     {
         return match($this) {

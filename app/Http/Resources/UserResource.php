@@ -24,6 +24,7 @@ class UserResource extends JsonResource
             'karma' => [
                 'current' => $this->karma,
                 'currentLevel' => KarmaCategoriesEnum::fromScore($this->karma)->value,
+                'currentLevelNumber' => KarmaCategoriesEnum::fromScore($this->karma)->currentLevelNumber(),
                 'required' => KarmaCategoriesEnum::tillNext($this->karma),
             ],
             'tasks_completed_count' => $this->tasks_completed_count,
