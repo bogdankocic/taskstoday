@@ -24,7 +24,7 @@ class UserRepository extends BaseRepository
     public function inviteUser(UserInviteRequest $request): void
     {
         $organizationId = $request->input('organization_id') ?? $request->user()->organization_id;
-        $teamRole = $request->user()->role->name === RolesEnum::ADMIN->value ?              TeamRolesEnum::ADMIN : $request->input('team_role');
+        $teamRole = $request->user()->role->name === RolesEnum::ADMIN->value ? TeamRolesEnum::ADMIN : $request->input('team_role');
 
         $user = User::create([
             'email' => $request->input('email'),
@@ -40,6 +40,7 @@ class UserRepository extends BaseRepository
     {
         $user = User::findOrFail($request->query('user_id'));
         $user->update([
+            'is_verified' => true,
             'password' => bcrypt($request->input('password')),
         ]);
     }
@@ -50,7 +51,12 @@ class UserRepository extends BaseRepository
 
         $user->first_name = $request->input('first_name');
         $user->last_name = $request->input('last_name');
-        $user->profile_photo = $profilePhotoPath;
+        
+        if($profilePhotoPath) {
+            $user->profile_photo = $profilePhotoPath;
+        }
+        
+        $user->save();
 
         return new UserResource($user);
     }
@@ -63,17 +69,37 @@ class UserRepository extends BaseRepository
     public function get(Request $request): ResourceCollection
     {
         $user = $request->user();
+        $organizationId = $request->query('organization_id');
+        $users = User::with(['organization', 'teams', 'tasks', 'achievements', 'tags']);
 
         if ($user->role->name === RolesEnum::ADMIN->value) {
-            return UserResource::collection(User::all());
+            if ($organizationId) {
+                $users->where('organization_id', $organizationId);
+            } else {
+                $users;
+            }
         } else {
-            return UserResource::collection(User::where('organization_id', $user->organization_id)->get());
+            $users->where('organization_id', $user->organization_id);
         }
+
+        $usersCollection = $users->get();
+
+        $usersCollection->each(function ($user) {
+            $user->setRelation('tags', $user->tags->unique(function ($tag) {
+                return $tag->pivot->tag_id . '-' . $tag->pivot->project_id;
+            })->values());
+        });
+
+        return UserResource::collection($usersCollection);
     }
 
     public function self(Request $request): UserResource
     {
-        return new UserResource($request->user()->load(['teams', 'tasks', 'achievements', 'tags']));
+        $user = $request->user()->load(['organization', 'teams', 'tasks', 'achievements', 'tags']);
+        $user->setRelation('tags', $user->tags->unique(function ($tag) {
+            return $tag->pivot->tag_id . '-' . $tag->pivot->project_id;
+        })->values());
+        return new UserResource($user);
     }
 
     public function getOneModel(int $id): User

@@ -7,9 +7,12 @@ use App\Enums\TeamRolesEnum;
 use App\Http\Requests\ProjectCreateRequest;
 use App\Http\Requests\ProjectUpdateRequest;
 use App\Http\Resources\ProjectResource;
+use App\Http\Resources\TeamResource;
+use App\Http\Resources\UserResource;
 use App\Models\Project;
 use App\Models\Team;
 use App\Models\TeamMember;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -50,8 +53,8 @@ class ProjectRepository extends BaseRepository
 
     public function update(Project $project, ProjectUpdateRequest $request): ProjectResource
     {
-        $project->title = $request->title;
-        $project->description = $request->description;
+        $project->title = $request->input('title');
+        $project->description = $request->input('description');
 
         $project->save();
 
@@ -64,9 +67,9 @@ class ProjectRepository extends BaseRepository
         $user = $request->user();
 
         if($user->teamrole === TeamRolesEnum::ADMIN->value) {
-            $projects = Project::where('organization_id', $user->organization_id)->get();
+            $projects = Project::with('teams.members')->where('organization_id', $user->organization_id)->get();
         } else {
-            $projects = Project::whereIn('id', function ($query) use ($user) {
+            $projects = Project::with('teams.members')->whereIn('id', function ($query) use ($user) {
                 $query->select('teams.project_id')
                     ->from('teams')
                     ->join('team_member', 'teams.id', '=', 'team_member.team_id')
@@ -75,6 +78,22 @@ class ProjectRepository extends BaseRepository
         }
 
         return ProjectResource::collection($projects);
+    }
+
+    public function getMembers(Project $project): ResourceCollection
+    {
+        $members = User::with(['tags'])->where('organization_id', $project->organization_id)->get();
+        $members->each(function ($user) {
+            $user->setRelation('tags', $user->tags->unique(function ($tag) {
+                return $tag->pivot->tag_id . '-' . $tag->pivot->project_id;
+            })->values());
+        });
+        return UserResource::collection($members);
+    }
+
+    public function getTeams(Project $project): ResourceCollection
+    {
+        return TeamResource::collection($project->teams);
     }
 
     public function finish(Project $project, Request $request): ProjectResource

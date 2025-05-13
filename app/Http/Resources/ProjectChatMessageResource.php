@@ -15,7 +15,8 @@ class ProjectChatMessageResource extends JsonResource
         return [
             'id' => $this->id,
             'text' => $this->text,
-            'user' => new UserResource($this->user),
+            'project_id' => $this->project_id,
+            'user' => new UserResource($this->whenLoaded('user')),
             'project' => new ProjectResource($this->whenLoaded('project')),
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),

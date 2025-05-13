@@ -20,11 +20,13 @@ class TaskResource extends JsonResource
             'complexity' => $this->complexity,
             'project' => $this->project,
             'team' => $this->team,
-            'creator' => $this->creator,
-            'performer' => $this->performer,
-            'contributor' => $this->contributor,
+            'creator' => new UserResource($this->whenLoaded('creator')),
+            'performer' => new UserResource($this->whenLoaded('performer')),
+            'contributor' => new UserResource($this->whenLoaded('contributor')),
+            'files' => TaskFileResource::collection($this->whenLoaded('files')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'user_voted' => $this->votes()->get()->pluck('user_id')->contains(auth()->user()->id),
         ];
     }
 }

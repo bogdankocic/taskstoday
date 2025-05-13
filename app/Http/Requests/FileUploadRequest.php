@@ -21,7 +21,17 @@ class FileUploadRequest extends FormRequest
     {
         return [
             'type' => 'required|string|in:task,project',
-            'id' => 'required|integer|exists:projects,id|exists:tasks,id',
+            'id' => [
+                'required',
+                'integer',
+                function ($attribute, $value, $fail) {
+                    if ($this->input('type') === 'project' && !\DB::table('projects')->where('id', $value)->exists()) {
+                        $fail('The selected id is invalid for the project type.');
+                    } elseif ($this->input('type') === 'task' && !\DB::table('tasks')->where('id', $value)->exists()) {
+                        $fail('The selected id is invalid for the task type.');
+                    }
+                },
+            ],
             'title' => 'required|string|max:255',
             'file' => 'required|file|max:10240|mimes:png,jpg,jpeg,pdf,csv,json',
         ];

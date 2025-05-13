@@ -41,11 +41,13 @@ class UserController extends Controller
      */
     public function selfUpdate(UpdateUserRequest $request): JsonResponse
     {
+        $profilePhotoPath = null;
+
         if($request->profile_photo) {
             $profilePhotoPath = request()->file('profile_photo')->store("uploads/users", config('filesystems.default'));
         }
 
-        $user = $this->userRepository->selfUpdate($request, $profilePhotoPath ?? null);
+        $user = $this->userRepository->selfUpdate($request, $profilePhotoPath ? 'storage/' . $profilePhotoPath : null);
         return response()->json($user);
     }
 

@@ -18,6 +18,7 @@ class ProjectResource extends JsonResource
             'status' => $this->status,
             'description' => $this->description,
             'organization_id' => $this->organization_id,
+            'teams' => TeamResource::collection($this->whenLoaded('teams')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,

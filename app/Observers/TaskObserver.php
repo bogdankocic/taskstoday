@@ -6,6 +6,7 @@ use App\Enums\AchievementsIdsEnum;
 use App\Enums\KarmaCategoriesEnum;
 use App\Enums\TagsIdsEnum;
 use App\Enums\TaskStatusesEnum;
+use App\Models\Notification;
 use App\Models\ProjectChatMessage;
 use App\Models\Task;
 use App\Models\UserProjectTag;
@@ -41,11 +42,25 @@ class TaskObserver
         $user = $task->creator;
         $performer = $task->performer;
 
-        $projectTasksForUser = $task->project->tasks()
-            ->where('performer_id', $performer->id)
-            ->get();
-
         $allUserNotCompletedTasks = $user->tasks()->whereNot('status', TaskStatusesEnum::COMPLETED->value)->get();
+
+        if ($task->wasChanged('performer_id')) {
+            Notification::create([
+                'title' => "Task assigned", 
+                'content' => "You have been assigned to a task {$task->name}", 
+                'is_seen' => false, 
+                'user_id' => $task->performer_id,
+            ]);
+        }
+
+        if ($task->wasChanged('contributor_id')) {
+            Notification::create([
+                'title' => "Help requested", 
+                'content' => "You have been assigned to help with a task {$task->name}", 
+                'is_seen' => false, 
+                'user_id' => $task->contributor_id,
+            ]);
+        }
 
         if ($task->wasChanged('status')) {
             if ($task->status === TaskStatusesEnum::INPROGRESS->value) {
@@ -57,6 +72,10 @@ class TaskObserver
             }
     
             if ($task->status === TaskStatusesEnum::COMPLETED->value) {
+                $projectTasksForUser = $task->project->tasks()
+                    ->where('performer_id', $performer->id)
+                    ->get();
+
                 $user->tasks_completed_count++;
                 $achievementsToAttach = [];
                 $contributorAchievementsToAttach = [];
@@ -124,8 +143,20 @@ class TaskObserver
                         ->where('tag_id', TagsIdsEnum::HelpingHand->value)
                         ->where('project_id', $task->project_id)
                         ->delete();
+
                     $contributor = $task->contributor;
+                    $currentContributorLevel = KarmaCategoriesEnum::fromScore($contributor->karma);
                     $contributor->karma += $task->complexity * 5;
+
+                    $newContributorLevel = KarmaCategoriesEnum::fromScore($contributor->karma);
+                    if ($newContributorLevel->value != $currentContributorLevel->value) {
+                        Notification::create([
+                            'title' => 'New Level Reached',
+                            'content' => "Congratulations! You have reached a new karma level: {$newContributorLevel->name}.",
+                            'user_id' => $contributor->id,
+                            'is_seen' => false,
+                        ]);
+                    }
 
                     if(
                         in_array(
@@ -159,8 +190,17 @@ class TaskObserver
                     }
                 }
         
-
+                $currentUserLevel = KarmaCategoriesEnum::fromScore($user->karma);
                 $user->karma += $task->complexity * 10;
+                $newLevel = KarmaCategoriesEnum::fromScore($user->karma);
+                if ($newLevel->value != $currentUserLevel->value) {
+                    Notification::create([
+                        'title' => 'New Level Reached',
+                        'content' => "Congratulations! You have reached a new karma level: {$newLevel->name}.",
+                        'user_id' => $user->id,
+                        'is_seen' => false,
+                    ]);
+                }
 
                 if(
                     in_array(

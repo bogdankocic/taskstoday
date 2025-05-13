@@ -55,7 +55,7 @@ class TaskRepository extends BaseRepository
     public function get(array $filters, Request $request): ResourceCollection
     {
         $user = $request->user();
-        $query = Task::query();
+        $query = Task::with(['creator', 'performer', 'contributor', 'files']);
 
         if($user->teamrole === TeamRolesEnum::ADMIN->value) {
             $query->join('projects', 'tasks.project_id', '=', 'projects.id')
@@ -74,11 +74,12 @@ class TaskRepository extends BaseRepository
         if($filters['save_filter']) {
             $cacheKey = "task-filter-{$request->user()->id}";
         
+            unset($filters['project_id']);
             unset($filters['save_filter']);
             Cache::forever($cacheKey, $filters);
         }
 
-        $filterableFields = ['team_id', 'complexity'];
+        $filterableFields = ['project_id', 'team_id', 'complexity'];
 
         foreach ($filterableFields as $field) {
             if (!empty($filters[$field])) {

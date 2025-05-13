@@ -78,6 +78,35 @@ class TeamController extends Controller
     }
 
     /**
+     * Get members of a team.
+     */
+    public function getMembers(Team $team, Request $request): JsonResponse
+    {
+        if (
+            ! Gate::allows(
+                'my-organization-and-admin-or-moderator-on-project-or-user-team-member', [ 
+                $this->organizationRepository->getOneModel($request->user()->organization_id),
+                $team,
+                $team->project_id
+            ])
+        ) {
+            abort(403, 'Unauthorized.');
+        }
+
+        $members = $this->teamRepository->getMembers($team, $request);
+        return response()->json($members);
+    }
+
+    /**
+     * Get the team.
+     */
+    public function getOne(Team $team): JsonResponse
+    {
+        $team = $this->teamRepository->getOne($team);
+        return response()->json($team);
+    }
+
+    /**
      * Add a member to a team.
      */
     public function addMember(Team $team, User $user, Request $request): JsonResponse
